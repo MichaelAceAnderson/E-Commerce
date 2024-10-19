@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		{% set name = 'Bashion' %}
+		{% set slogan = 'Les bases du fashion' %}
+
+        <meta charset="UTF-8">
+
+        <title>{% block pageTitle %}{{ name }}{% endblock %}</title>
+		<meta name="description" content="{{ slogan }}, une expérience sur-mesure dans le prêt-à-porter !">
+		<meta name="keywords" content="{{ name }}, Vêtements, Prêt-à-porter, Mode, Fashion, Style, Tendance, Tendances, Tendances mode, Tendances fashion, Tendances vêtements, Tendances prêt-à-porter, Vêtements tendances, Prêt-à-porter tendances, Mode tendances, Mode fashion, Fashion mode, Fashion vêtements, Fashion prêt-à-porter, Style tendances, Style fashion, Style vêtements, Style prêt-à-porter">
+		<meta name="author" content="Adrien">
+        <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+		<link rel="alternate icon" href="/favicon.ico">
+
+		<link rel="stylesheet" href="/assets/style/css/theme/general.css">
+		{# Selon si le thème est sombre ou clair, on modifie la couleur du thème du navigateur (Chrome mobile) #}
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="white">
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#333">
+
+		{# Utilisé pour le responsive #}
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		{% block stylesheets %}
+        {% endblock %}
+
+		{# Empêcher transitions CSS de s'appliquer lors du chargement de la page grâce à la classe loading#}
+		<script src="/assets/style/js/transitionLoader.js"></script>
+        {% block scripts %}
+        {% endblock %}
+    </head>
+    <body class="loading">
+        {% block content %}{% endblock %}
+    </body>
+</html>

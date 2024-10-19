@@ -1,0 +1,48 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Aide & support' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Accueil' },
+	{ 'link': path(currentRoute), 'name': currentPage }
+]} %}
+
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+
+		<h2>Comment passer une commande ?</h2>
+		<ol>
+			<li>Choisissez les produits que vous souhaitez acheter en cliquant sur le bouton "Ajouter au panier".</li>
+			<li>Une fois que vous avez terminé votre sélection, cliquez sur le bouton "Panier" en haut à droite de la page.</li>
+			<li>Vous pouvez alors vérifier le contenu de votre panier et modifier les quantités si besoin.</li>
+			<li>Une fois que vous avez vérifié votre panier, cliquez sur le bouton "Commander".</li>
+			<li>Vous pouvez alors vous connecter à votre compte si vous en avez un, ou bien créer un compte si vous n'en avez pas.</li>
+			<li>Une fois connecté, vous pouvez choisir votre adresse de livraison et votre mode de paiement.</li>
+			<li>Enfin, cliquez sur le bouton "Valider la commande" pour finaliser votre achat.</li>
+		</ol>
+
+		<h2>Comment suivre ma commande ?</h2>
+		<ol>
+			<li>Connectez-vous à votre compte.</li>
+			<li>Cliquez sur "Mes commandes" dans le menu de gauche.</li>
+			<li>Vous pouvez alors voir l'état de vos commandes et les détails de chacune d'entre elles.</li>
+			<li>Dans un premier temps, votre commande sera en attente de validation</li>
+			<li>Une fois validée, la commande sera en attente de préparation</li>
+			<li>Enfin, une fois que votre commande est prête, elle sera en attente de livraison</li>
+		</ol>
+
+		<h2>En cas de problème ou de questions, qui contacter ?</h2>
+		<p>Si vous avez des questions ou des problèmes, contactez l'administrateur du site.</p>		
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

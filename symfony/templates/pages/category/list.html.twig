@@ -1,0 +1,76 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Page d\'administration des catégories' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Accueil' },
+		{ 'link': path('app_category_list'), 'name': 'Gestion des catégories' }
+	]} 
+	%}
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+
+    <h2>Liste des catégories</h1>
+
+	{% include 'structure/notifications.html.twig' %}
+    <a href="{{ path('app_category_create') }}" class="btn btn-secondary">Créer une catégorie</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+				<th>Image</th>
+				<th>Nom</th>
+				<th>Description</th>
+				<th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td>
+					{% if category.media is not null %}
+						{# Si le média est une image #}
+						{% if 'image' in category.media.type %}
+							<img src="{{ category.media.path }}" alt="{{ category.media.alt }}" title="{{ category.media.alt }}">
+						{# Si le média est une vidéo #}
+						{% elseif 'video' in category.media.type %}
+							<video src="{{ category.media.path }}" title="{{ category.media.alt }}" muted loop autoplay preload></video>
+						{# Si le média est d'un type non pris en charge #}
+						{% else %}
+							{% include 'icons/menus/help.svg' %}
+						{% endif %}
+					{% else %}
+						{% include 'icons/menus/help.svg' %}
+					{% endif %}
+				</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.description }}</td>
+				<td>
+					<a href="{{ path('app_product_search', {'category': category.id}) }}" target="_blank" class="btn btn-secondary">Voir</a>
+					<a href="{{ path('app_category_edit', {'id': category.id}) }}" target="_blank" class="btn btn-secondary">Éditer</a>
+					<form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}" onsubmit="return confirm('Êtes vous certain de vouloir supprimer la catégorie {{ category.name }} ?')">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+						<button class="btn btn-danger">Supprimer</button>
+					</form>
+				</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucune catégorie trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	</section>
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

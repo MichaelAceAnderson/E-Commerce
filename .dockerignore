@@ -1,0 +1,30 @@
+# Note: ce fichier doit être placé dans le contexte de construction de l'image Docker
+
+# ================= ENVIRONNEMENT DE DÉVELOPPEMENT =================
+# Ignorer les fichiers Docker
+.docker/**/Dockerfile
+.docker/**/.env*
+# Ignorer tous les fichiers et dossiers commençant par ".git"
+**/.git*
+# Ignorer tous les fichiers d'information markdown
+**/*.md
+# Ignorer les scripts shell relatifs à Docker
+**/docker-*.sh
+# Ignorer le fichier Makefile
+Makefile
+# ==================================================================
+
+# ================= FICHIERS APPLICATIFS ===========================
+# Ignorer les fichiers de dépendances et de cache de Composer de l'hôte
+# (l'installation de Composer est effectuée dans le conteneur)
+symfony/vendor/
+symfony/var/
+
+# Ignorer les fichiers CSS et SCSS à l'exception de general.css
+**/*.css
+**/*.scss
+!**/general.css
+
+# Ignorer les données du volume local de base de données MariaDB
+.docker/mariadb/data
+# ==================================================================

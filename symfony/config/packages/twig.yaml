@@ -1,0 +1,21 @@
+framework:
+    # Faire gérer les erreurs par un contrôleur personnalisé
+    error_controller: App\Controller\ErrorController::showError
+
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    # Thème des formulaires
+    form_themes: ['structure/forms.html.twig']
+
+when@test:
+    twig:
+        strict_variables: true
+
+when@dev:
+  framework:
+    # Faire gérer les erreurs par Symfony (par défaut) en mode développement
+    error_controller: null
+when@local:
+  framework:
+    # Faire gérer les erreurs par Symfony (par défaut) en mode développement
+    error_controller: null

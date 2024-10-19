@@ -1,0 +1,134 @@
+{% extends 'structure/base.html.twig' %}
+
+{% if user == app.user %}
+	{% set currentPage = 'Mon compte' %}
+{% else %}
+	{% set currentPage = 'Éditer le profil' %}
+{% endif %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% if user == app.user %}
+		{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Accueil' },
+	{ 'link': path(currentRoute, {'id': user.id}), 'name': currentPage }
+	]} %}
+	{% else %}
+		{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Accueil' },
+	{ 'link': path('app_user_list'), 'name': 'Gestion des utilisateurs' },
+	{ 'link': user.id ? path(currentRoute, {'id': user.id}) : '#', 'name': currentPage }
+	]} %}
+	{% endif %}
+
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+
+		{% if user %}
+			<h2>Votre profil</h2>
+			<p>Vous êtes connecté en tant que
+				{{ app.user.firstName }}
+				{{ app.user.lastName }}.</p>
+
+			<a href="{{ path('app_order_list') }}" class="btn btn-primary">Mes commandes</a>
+			<a href="{{ path('app_user_logout') }}" class="btn btn-secondary">Se déconnecter</a>
+
+			{% if is_granted('ROLE_ADMIN') %}
+			<h2>Administration</h2>
+				<a href="{{ path('app_user_list') }}" class="btn btn-primary">Gestion des utilisateurs</a>
+				<a href="{{ path('app_category_list') }}" class="btn btn-primary">Gestion des catégories</a>
+				<a href="{{ path('app_product_list') }}" class="btn btn-primary">Gestion des produits</a>
+				<a href="{{ path('app_media_list') }}" class="btn btn-primary">Gestion des médias</a>
+				<a href="{{ path('app_test') }}" class="btn btn-primary">Page de tests</a>
+			{% endif %}
+			{% if user == app.user %}
+				<h2>Modifier mon profil</h2>
+			{% else %}
+				<h2>Modifier le profil de
+					{{ user.firstName }}
+					{{ user.lastName }}</h2>
+			{% endif %}
+			{{ form_start(editionForm) }}
+			<table class="table">
+
+				{% if is_granted('ROLE_ADMIN') %}
+					<tr>
+						<th>Id</th>
+						<td>{{ user.id }}</td>
+					</tr>
+				{% endif %}
+				<tr>
+					<th>{{ form_label(editionForm.firstName) }}</th>
+					<td>{{ form_errors(editionForm.firstName) }}
+						{{ form_widget(editionForm.firstName) }}</td>
+				</tr>
+				<tr>
+					<th>{{ form_label(editionForm.lastName) }}</th>
+					<td>{{ form_errors(editionForm.lastName) }}
+						{{ form_widget(editionForm.lastName) }}</td>
+				</tr>
+				<tr>
+					<th>{{ form_label(editionForm.email) }}</th>
+					<td>{{ form_errors(editionForm.email) }}
+						{{ form_widget(editionForm.email) }}</td>
+				</tr>
+				<tr>
+					<th>{{ form_label(editionForm.phone) }}</th>
+					<td>{{ form_errors(editionForm.phone) }}
+						{{ form_widget(editionForm.phone) }}</td>
+				</tr>
+				<tr>
+					<th>{{ form_label(editionForm.password.first) }}</th>
+					<td>{{ form_errors(editionForm.password.first) }}
+						{{ form_widget(editionForm.password.first) }}</td>
+				</tr>
+				<tr>
+					<th>{{ form_label(editionForm.password.second) }}</th>
+					<td>{{ form_errors(editionForm.password.second) }}
+						{{ form_widget(editionForm.password.second) }}</td>
+				</tr>
+				{% if is_granted('ROLE_ADMIN') and editionForm.roles is defined %}
+					<tr>
+						<th>{{ form_label(editionForm.roles) }}</th>
+						<td>{{ form_errors(editionForm.roles) }}
+							{{ form_widget(editionForm.roles) }}</td>
+					</tr>
+				{% endif %}
+				<tr>
+					{# S'il s'agit d'un formulaire d'administrateur, on peut vérifier l'utilisateur #}
+					{% if editionForm.isVerified is defined %}
+						<th>{{ form_label(editionForm.isVerified) }}</th>
+						<td>
+							{{ form_errors(editionForm.isVerified) }}
+							{{ form_widget(editionForm.isVerified) }}
+						</td>
+					{% endif %}
+				</tr>
+				<tr>
+					<th>Actions</th>
+					<td>
+						{{ form_widget(editionForm.save) }}
+					</td>
+				</tr>
+			</table>
+			{{ form_end(editionForm) }}
+			<form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes vous certain de vouloir supprimer ce compte ? Cela entraînera également la suppression du panier, des commandes et des adresses.')">
+				<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+				<button class="btn btn-danger">Supprimer le profil</button>
+			</form>
+		{% else %}
+			<div class="notification error">L'utilisateur que vous recherchez n'existe pas ! Cliquez
+				<a href="{{ path('app_home') }}">ici</a>
+				pour revenir à l'accueil.</div>
+		{% endif %}
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Erreur' ~ (statusCode ? ' - ' ~ statusCode : '') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': '', 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Accueil' },
+	{ 'link': '', 'name': currentPage }
+]} %}
+
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+
+			<p class="notification error">{{ message|nl2br }}</p>
+			<p>Cliquez <a href="{{ path('app_home') }}">ici</a> pour revenir à l'accueil.</p>
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

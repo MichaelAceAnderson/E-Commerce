@@ -1,0 +1,26 @@
+
+###> symfony/framework-bundle ###
+symfony/config/secrets/prod/prod.decrypt.private.php
+symfony/public/bundles/
+symfony/var/
+symfony/vendor/
+###< symfony/framework-bundle ###
+
+# Ne pas suivre les fichiers de configuration de l'IDE
+.vscode/
+# Ne pas suivre les fichiers de compilation SASS
+**/*.css.map
+# Ne pas suivre les fichiers CSS générés
+**/*.css
+# Suivre le fichier general.css
+!**/general.css
+# Ne pas suivre les logs
+**/*.log*
+# Ne pas suivre les données de base de données
+.docker/mariadb/data/*
+# Console composer
+**/composer.phar
+**/composer.bat
+
+# Conserver les dossiers contenant un fichier .gitkeep mais pas nécessairement leur contenu
+!**/.gitkeep

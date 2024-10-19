@@ -1,0 +1,37 @@
+        {% block footer %}
+		<footer>
+		<div class="row">
+			<div class="col">
+				<h1>Aide</h1>
+				<ul>
+					<li><a href="#">FAQ</a></li>
+					<li><a href="#">Contact</a></li>
+					<li><a href="#">Mentions légales</a></li>
+				</ul>
+			</div>
+			<div class="col">
+				<h1>Bashion sur les réseaux sociaux</h1>
+				<ul class="social">
+					<li><a href="#">{% include 'icons/brands/social-media/x.svg' %}</a></li>
+					<li><a href="#">{% include 'icons/brands/social-media/insta.svg' %}</a></li>
+					<li><a href="#">{% include 'icons/brands/social-media/tiktok.svg' %}</a></li>
+				</ul>
+			</div>
+			<div class="col">
+				<h1>En savoir plus</h1>
+					<ul>
+						<li><a href="#">À propos</a></li>
+						<li><a href="#">Nos magasins</a></li>
+						<li><a href="#">Mentions légales & confidentialité</a></li>
+						<li><a href="#">Conditions générales de vente</a></li>
+						<li><a href="#">Politique de livraison & retours</a></li>
+						<li><a href="#">Politique de cookies</a></li>
+					</ul>
+			</div>
+		</div>
+		<div class="row copyright">
+			<img src="/assets/img/logo.png" alt="Logo" title="Logo" class="logo">
+			<p>&copy; {{ "now"|date("Y") }} - Tous droits réservés</p>
+		</div>
+		</footer>
+		{% endblock %}

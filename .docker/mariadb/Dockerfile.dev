@@ -1,0 +1,21 @@
+# Note: Docker ne peut pas aller chercher des fichiers hors du contexte de build
+# On construit donc cette image à partir du dossier racine du projet
+
+# Image de base
+FROM mariadb:11.3.2
+
+# Définir le répertoire de travail
+WORKDIR /etc/mysql/
+
+# Copier les fichiers de configuration de MariaDB
+COPY .docker/mariadb/conf/ ./
+
+# my.cnf est un lien symbolique qui pointe sur le fichier de configuration mariadb.cnf
+# Les configurations seront ignorées si les droits sont trop permissifs
+RUN chmod 644 /etc/mysql/my.cnf
+
+# Copier les scripts d'initialisation automatique de la base de données
+COPY .docker/mariadb/init/ /docker-entrypoint-initdb.d/
+
+# Rendre l'application accessible sur le port 3306
+EXPOSE 3306

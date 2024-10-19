@@ -1,0 +1,35 @@
+{# Il est possible d'afficher les messages flash en HTML à l'aide du filtre |raw, mais
+ce filtre est dangereux car il désactive l'échappement des caractères HTML et permet donc
+l'injection de code malveillant dans la page. On utilisera donc des tableaux dans les messages flash
+à partir desquels on convertira les noms de clés en éléments HTML et on affichera les valeurs #}
+
+{# nl2br convertit les sauts de ligne \n au format <br> #}
+{# Ce filtre est nécessaire pour faire des retours à la ligne dans les messages flash
+	puisque le code HTML est échappé par défaut dans Twig #}
+{% for type, messages in app.flashes %}
+	{% for message in messages %}
+		<p class="notification {{ type }}">
+		{# Si le message est itérable (tableau, ...) #}
+		{% if message is iterable %}
+			{% for element, msg in message %}
+					{# Permettre l'affichage des titres h1,h2,h3 etc mais ignorer les autres clés contenant des nombres #}
+
+					{# Si la clé contient un chiffre et un underscore #}
+					{% if element matches '/.*_\\d+/' %}
+						{# Ignorer les nombres et l'underscore dans le nom de la clé #}
+						{% set element = element|replace({ '_': '',  '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '', '8': '', '9': '' }) %}
+					{% endif %}
+					
+					{# Si la clé contient "msg" dans son nom #}
+					{% if element matches '/msg/' %}
+						{{ msg|nl2br }}
+					{% else %}
+						<{{ element }}>{{ msg|nl2br }}</{{ element }}>
+					{% endif %}
+				{% endfor %}
+		{% else %}
+			{{ message|nl2br }}
+		{% endif %}
+		</p>
+	{% endfor %}
+{% endfor %}

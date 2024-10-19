@@ -1,0 +1,66 @@
+server {
+	# Port d'écoute du serveur
+    listen 80;
+	# Domaine du serveur
+    server_name localhost;
+
+	# Emplacement des fichiers du site
+    root /var/www/html/public;
+
+	# Fichiers de logs
+    error_log /var/log/nginx/error_symfony.log;
+    access_log /var/log/nginx/access_symfony.log;
+
+	# Fichier index par défaut
+    index index.php;
+
+	# Encodage de caractères à utiliser pour les fichiers statiques
+	charset utf-8; 
+
+    location / {
+		# Tenter de servir l'URI demandée en premier, sinon utiliser index.php avec les arguments de la requête
+        try_files $uri /index.php$is_args$args;
+    }
+
+    location ~ ^/index\.php(/|$) {
+		# Emplacement du socket de traitement des scripts PHP (nom-service-docker:port)
+		# NOTE: Nginx ne supporte pas nativement les variables d'environnement,
+		# on utilise donc envsubst pour les remplacer par leur valeur au démarrage du conteneur
+        fastcgi_pass ${PHP_SERVICE_HOST}:${PHP_SERVICE_PORT};
+		# Séparation du chemin du script et des arguments
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+		# Paramètres de traitement des scripts PHP
+        include fastcgi_params;
+
+		##
+		# Customisation des paramètres de FastCGI
+		##
+		# Paramètres d'emplacement du fichier requêté (utile pour les redirections et routages)
+        fastcgi_param REQUEST_URI $request_uri;
+        fastcgi_param DOCUMENT_URI $document_uri;
+		# Emplacement du fichier PHP à traiter
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        # Informations sur le chemin du script
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+		# Dossier racine du site
+        fastcgi_param DOCUMENT_ROOT $document_root;
+		# Protocole de la requête
+        fastcgi_param SERVER_PROTOCOL $server_protocol;
+		# Traiter toutes les requêtes comme si elles étaient HTTP
+        fastcgi_param HTTPS off;
+		# Nombre et taille des tampons de FastCGI
+        fastcgi_buffers 16 16k;
+		# Taille maximale des tampons de FastCGI
+        fastcgi_buffer_size 32k;
+    }
+
+    location ~ \.php$ {
+		# Interdire l'accès direct aux fichiers PHP
+        return 404;
+    }
+
+    location ~ /\.ht {
+		# Interdire l'accès aux fichiers .ht
+        deny all;
+    }
+}

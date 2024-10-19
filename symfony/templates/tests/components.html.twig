@@ -1,0 +1,207 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Page de tests: Composants UI' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Accueil' },
+	{ 'link': path(currentRoute), 'name': currentPage }
+]} %}
+	<section class="section">
+		<div class="intro">
+			<div class="title">
+				<h1>{{ currentPage }}</h1>
+				<hr>
+			</div>
+		</div>
+		<h1>Titre 1</h1>
+		<h2>Titre 2</h2>
+		<h3>Titre 3</h3>
+		<h4>Titre 4</h4>
+		<h5>Titre 5</h5>
+		<h6>Titre 6</h6>
+		<p>Paragraphe</p>
+		<p>
+			<strong>Paragraphe fort</strong>
+		</p>
+		<p>
+			<em>Paragraphe italique</em>
+		</p>
+		<p>
+			<u>Paragraphe souligné</u>
+		</p>
+		<p>
+			<s>Paragraphe barré</s>
+		</p>
+		<p>
+			<mark>Paragraphe surligné</mark>
+		</p>
+		<p>
+			<small>Paragraphe petit</small>
+		</p>
+		<p>
+			<big>Paragraphe grand</big>
+		</p>
+		<p>
+			<sub>Paragraphe en indice</sub>
+		</p>
+		<p>
+			<sup>Paragraphe en exposant</sup>
+		</p>
+		<p>
+			<abbr title="HyperText Markup Language">HTML</abbr>
+		</p>
+		<p>
+			<cite>Citation</cite>
+		</p>
+		<p>
+			<code>Code</code>
+		</p>
+		<p>
+			<kbd>Clavier</kbd>
+		</p>
+		<p>
+			<samp>Exemple</samp>
+		</p>
+		<p>
+			<a href="#">Lien</a>
+		</p>
+		<div class="component">
+			<h1>Composants de formulaire</h1>
+			<button type="button" class="btn btn-primary">Bouton primaire</button>
+			<button type="button" class="btn btn-secondary">Bouton secondaire</button>
+			<button type="button" class="btn btn-danger">Bouton danger</button>
+			<input type="text" class="input" placeholder="Champ de texte">
+			<input type="password" class="input" placeholder="Champ de mot de passe">
+			<input type="email" class="input" placeholder="Champ d'email">
+			<input type="number" class="input" placeholder="Champ de nombre">
+			<input type="tel" class="input" placeholder="Champ de téléphone">
+			<input type="url" class="input" placeholder="Champ d'url">
+			<input type="date" class="input" placeholder="Champ de date">
+			<input type="time" class="input" placeholder="Champ d'heure">
+			<input type="datetime-local" class="input" placeholder="Champ de date et heure">
+			<input type="month" class="input" placeholder="Champ de mois">
+			<input type="week" class="input" placeholder="Champ de semaine">
+			<input type="color" class="input" placeholder="Champ de couleur">
+			<textarea class="textarea" placeholder="Zone de texte"></textarea>
+			<select class="select">
+				<option value="1">Option 1</option>
+				<option value="2">Option 2</option>
+				<option value="3">Option 3</option>
+			</select>
+			<input type="file" placeholder="Champ de fichier" accept="image/*" multiple class="input">
+			<input type="checkbox" class="checkbox" class="checkbox">
+			<input type="radio" class="radio">
+
+		</div>
+		<div class="component">
+			<h1>Tableau</h1>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Entête 1</th>
+						<th>Entête 2</th>
+						<th>Entête 3</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Cellule 1</td>
+						<td>Cellule 2</td>
+						<td>Cellule 3</td>
+					</tr>
+					<tr>
+						<td>Cellule 4</td>
+						<td>Cellule 5</td>
+						<td>Cellule 6</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="component">
+			<h1>Switch (bascule)</h1>
+			<label class="switch">
+				<input type="checkbox" id="themeSwitch">
+				<span class="slider round"></span>
+			</label>
+		</div>
+		<div class="component">
+			<h1>Review</h1>
+			<div class="reviews">
+				<div class="review open">
+					<div class="intro">
+						<span class="profile">{% include 'icons/menus/account.svg' %}</span>
+						<div class="infos">
+							<div class="stars">
+								{% for i in 1..3 %}
+									{% include 'icons/menus/star-full.svg' %}
+								{% endfor %}
+								{% for i in 1..2 %}
+									{% include 'icons/menus/star-empty.svg' %}
+								{% endfor %}
+							</div>
+							<h2>Titre</h2>
+						</div>
+					</div>
+					<div class="content">
+						<p>Texte</p>
+					</div>
+					<div class="source">
+						<p>Source :
+							<a href="">{% include 'icons/brands/Google.svg' %}</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="component">
+			<h1>Étapes de commande</h1>
+			<div class="order-steps">
+				<div class="step active">
+					<div class="circle">
+						{% include 'icons/menus/cart.svg' %}
+					</div>
+					<p>1. Étape 1</p>
+				</div>
+				<div class="step">
+					<div class="circle">
+						{% include 'icons/menus/home.svg' %}
+					</div>
+					<p>2. Étape 2</p>
+				</div>
+				<div class="step">
+					<div class="circle">
+						{% include 'icons/menus/credit_card.svg' %}
+					</div>
+					<p>3. Étape 3</p>
+				</div>
+			</div>
+		</div>
+		<div class="component">
+			<h1>Produit</h1>
+				<div class="items">
+					<a class="item" href="#">
+						<div class="preview">
+							{% include 'icons/menus/help.svg' %}
+						</div>
+						<div class="info">
+							<h2>Nom</h2>
+							<p>Prix €</p>
+						</div>
+					</a>
+				</div>
+		</div>
+	</section>
+
+
+
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

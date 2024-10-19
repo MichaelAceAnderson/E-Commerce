@@ -1,0 +1,133 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Accueil' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block scripts %}
+	<script src="/assets/style/js/toggleFullReview.js"></script>
+{% endblock %}
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': currentPage },
+	]} 
+	%}
+	<div class="banner">
+		<div class="men">
+			<a href="{{ path('app_product_search', {'name': 'Homme'}) }}" class="btn btn-primary">Homme</a>
+			<img src="/assets/img/banner/men.png">
+		</div>{# 
+		Ce commentaire ne prend en compte ni les espaces ni les tabs entre les deux divs et évite un débordement
+		 #}<div class="women">
+			<a href="{{ path('app_product_search', {'name': 'Femme'}) }}" class="btn btn-primary">Femme</a>
+			<img src="/assets/img/banner/women.png">
+		</div>
+	</div>
+	<div class="announce">
+		<div class="feature">
+			{% include 'icons/menus/gift.svg' %}
+			<h1>Livraison offerte dès 30€</h1>
+		</div>
+		<div class="feature">
+			{% include 'icons/menus/phone.svg' %}
+			<h1>Téléchargez l'appli !</h1>
+		</div>
+		<div class="feature">
+			{% include 'icons/menus/credit_card.svg' %}
+			<h1>Paiements sécurisés</h1>
+		</div>
+	</div>
+	<section class="section reviews">
+		<div class="intro">
+			<div class="title">
+				<h1>Les avis de nos clients</h1>
+				<hr>
+			</div>
+		</div>
+		<div class="review open">
+			<div class="intro">
+				<span class="profile">{% include 'icons/menus/account.svg' %}</span>
+				<div class="infos">
+					<div class="stars">
+						{% for i in 1..5 %}
+							{% include 'icons/menus/star-full.svg' %}
+						{% endfor %}
+					</div>
+					<h2>Enfin une marque qui me ressemble !</h2>
+				</div>
+			</div>
+			<div class="content">
+			<p>Je suis absolument ravi de ma découverte sur ce site de vente en ligne de vêtements ! 
+						Enfin une marque qui me ressemble ! Il y a à la fois beaucoup de choix et rien de trop excentrique,
+						on ne cherche pas pendant des heures. Les vêtements vont avec tout mais reflètent également ma personnalité.
+						J’apprécie beaucoup le fait de pouvoir personnaliser les vêtements avec la coupe, la couleur et le tissu que je veux</p>
+			</div>
+			<div class="source">
+				<p>Source :
+					<a href="">{% include 'icons/brands/Google.svg' %}</a>
+				</p>
+			</div>
+		</div>
+		<div class="review open">
+			<div class="intro">
+				<span class="profile">{% include 'icons/menus/account.svg' %}</span>
+				<div class="infos">
+					<div class="stars">
+						{% for i in 1..4 %}
+							{% include 'icons/menus/star-full.svg' %}
+						{% endfor %}
+						{% for i in 1..1 %}
+							{% include 'icons/menus/star-empty.svg' %}
+						{% endfor %}
+					</div>
+					<h2>Mon mari adore</h2>
+				</div>
+			</div>
+			<div class="content">
+				<p>J'ai récemment commandé des vêtements sur ce site pour surprendre mon mari pour son anniversaire,
+								mais je me suis un un peu embrouillée. Malheureusement, la coupe ne correspondaient pas tout à fait
+								à la morphologie de mon mari. Cependant, le service client a été très réactif et m'a aidé à trouver 
+								une solution. Malgré ce petit contretemps, mon mari a apprécié l'attention et la surprise du cadeau,
+								et nous avons réussi à trouver des alternatives qui lui vont parfaitement. 
+								En fin de compte, la gentillesse du service client a fait toute la différence, et je suis reconnaissante
+								de leur aide dans cette situation.</p>
+			</div>
+			<div class="source">
+				<p>Source :
+					<a href="">{% include 'icons/brands/TrustPilot.svg' %}</a>
+				</p>
+			</div>
+		</div>
+		<div class="review open">
+			<div class="intro">
+				<span class="profile">{% include 'icons/menus/account.svg' %}</span>
+				<div class="infos">
+					<div class="stars">
+						{% for i in 1..3 %}
+							{% include 'icons/menus/star-full.svg' %}
+						{% endfor %}
+						{% for i in 1..2 %}
+							{% include 'icons/menus/star-empty.svg' %}
+						{% endfor %}
+					</div>
+					<h2>Taille large mais super tissus</h2>
+				</div>
+			</div>
+			<div class="content">
+				<p>Le titre est explicite</p>
+			</div>
+			<div class="source">
+				<p>Source :
+					<a href="">{% include 'icons/brands/Google.svg' %}</a>
+				</p>
+			</div>
+		</div>
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

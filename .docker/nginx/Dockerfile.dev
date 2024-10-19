@@ -1,0 +1,24 @@
+# Note: Docker ne peut pas aller chercher des fichiers hors du contexte de build
+# On construit donc cette image à partir du dossier racine du projet
+
+# Image de base
+FROM nginx:stable-alpine
+
+# Définir le répertoire de travail
+WORKDIR /var/www/html/
+
+# C'est Nginx qui sert les fichiers statiques et donne accès aux fichiers PHP,
+# il doit donc contenir les assets ainsi que le point d'entrée de l'application
+# afin de rediriger les requêtes vers PHP-FPM qui renverra le contenu statique généré
+COPY symfony/public ./public/
+
+# Copier la configuration initiale de Nginx
+COPY .docker/nginx/conf/nginx.conf /etc/nginx/nginx.conf
+# Copier le template de configuration du site
+COPY .docker/nginx/conf/conf.d/default.conf.template /etc/nginx/conf.d/default.conf.template
+
+# Rendre l'application accessible sur le port 8000
+EXPOSE 8000
+
+# Exécuter Nginx après avoir remplacé les variables d'environnement dans le fichier de configuration
+CMD ["/bin/sh", "-c", "envsubst '${PHP_SERVICE_HOST},${PHP_SERVICE_PORT}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"]

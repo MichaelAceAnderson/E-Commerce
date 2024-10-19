@@ -1,0 +1,70 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Page d\'administration des médias' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Accueil' },
+		{ 'link': path('app_media_list'), 'name': 'Gestion des médias' }
+	]} 
+	%}
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+
+    <h2>Liste des médias</h1>
+
+	{% include 'structure/notifications.html.twig' %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+				<th>Image</th>
+				<th>Chemin</th>
+				<th>Description</th>
+				<th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for media in medias %}
+            <tr>
+                <td>{{ media.id }}</td>
+                <td>
+					{# Si le média est une image #}
+					{% if 'image' in media.type %}
+						<img src="{{ media.path }}" alt="{{ media.alt }}" title="{{ media.alt }}">
+					{# Si le média est une vidéo #}
+					{% elseif 'video' in media.type %}
+						<video src="{{ media.path }}" title="{{ media.alt }}" muted loop autoplay preload></video>
+					{# Si le média est d'un type non pris en charge #}
+					{% else %}
+						{% include 'icons/menus/help.svg' %}
+					{% endif %}
+				</td>
+                <td>{{ media.path }}</td>
+                <td>{{ media.alt }}</td>
+				<td>
+					<a href="{{ media.path }}" target="_blank" class="btn btn-secondary">Voir</a>
+					<form method="post" action="{{ path('app_media_delete', {'id': media.id}) }}" onsubmit="return confirm('Êtes vous certain de vouloir supprimer le média {{ media.path }} ?')">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ media.id) }}">
+						<button class="btn btn-danger">Supprimer</button>
+					</form>
+				</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucun média trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	</section>
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

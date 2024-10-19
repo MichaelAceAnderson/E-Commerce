@@ -1,0 +1,16 @@
+.section{
+	background: rgba(var(--bg-content));
+	color: rgba(var(--text-content));
+	padding: 10px 50px;
+	position: relative;
+
+	&.center{
+		text-align: center;
+	}
+
+	.intro{
+		text-align: left;
+		display: block;
+		font-weight: bold;
+	}
+}

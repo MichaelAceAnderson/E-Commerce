@@ -1,0 +1,115 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Mon panier' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Accueil' },
+	{ 'link': path('app_user_show'), 'name': 'Mon compte' },
+	{ 'link': (cart ? path(currentRoute, {'cartId': cart.id}) : '#'), 'name': currentPage }
+	]} %}
+
+	<section class="section center">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+		{% if cart is defined %}
+				<div class="order-steps">
+					<div class="step">
+						<div class="circle">
+							{% include 'icons/menus/cart.svg' %}
+						</div>
+						<p>1. Panier</p>
+					</div>
+					<div class="step active">
+						<div class="circle">
+							{% include 'icons/menus/home.svg' %}
+						</div>
+						<p>2. Informations de livraison</p>
+					</div>
+					<div class="step">
+						<div class="circle">
+							{% include 'icons/menus/credit_card.svg' %}
+						</div>
+						<p>3. Paiement</p>
+					</div>
+				</div>
+
+				<div class="product-list">
+					<div class="title">
+						<h2>Détails de la commande</h2>
+						<hr>
+					</div>
+					{{ form_start(addressForm) }}
+					<div class="box">
+						<div class="title">
+							<h3>Détails de facturation</h3>
+							<hr>
+						</div>
+						<div class="row">
+							{{ form_row(addressForm.lastName) }}
+
+							{{ form_row(addressForm.firstName) }}
+
+							{{ form_row(addressForm.phone) }}
+						</div>
+					</div>
+					<div class="box">
+						<div class="title">
+							<h3>Options de livraison</h3>
+							<hr>
+						</div>
+						<div class="row">
+							{{ form_row(addressForm.address) }}
+
+							{{ form_row(addressForm.type) }}
+
+							{{ form_row(addressForm.city) }}
+
+							{{ form_row(addressForm.postalCode) }}
+
+							{{ form_row(addressForm.country) }}
+						</div>
+					</div>
+					<div class="box">
+						<div class="title">
+							<h3>Options de paiement</h3>
+							<hr>
+						</div>
+						<div class="row">
+							<fieldset>
+								<legend>Méthode de paiement:</legend>
+								<div class="field">
+									<input class="radio" type="radio" name="paymentMethod" value="creditCard" id="creditCard">
+									<label class="label" for="creditCard">
+										{% include 'icons/menus/credit_card.svg' %}
+										Carte de crédit
+									</label>
+									<input class="radio" type="radio" name="paymentMethod" value="paypal" id="paypal">
+									<label class="label" for="paypal">
+										{% include 'icons/brands/PayPal.svg' %}
+										Paypal
+									</label>
+								</div>
+							</fieldset>
+						</div>
+					</div>
+					<div class="summary">
+					{{ form_row(addressForm.submit) }}
+					</div>
+					{{ form_end(addressForm) }}
+				</div>
+		{% else %}
+			<p class="notification info">Vous ne pouvez pas commander sans avoir de panier !</p>
+		{% endif %}
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

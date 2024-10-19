@@ -1,0 +1,59 @@
+# NOTE: Docker ne peut pas aller chercher des fichiers hors du contexte de build
+# On construit donc cette image à partir du dossier racine du projet
+
+# Image de base
+# Pour pouvoir communiquer avec le conteneur Nginx, FPM est nécessaire
+# Alpine est une version allégée de Linux qui permet de réduire la taille de l'image
+FROM php:8.2-fpm-alpine
+
+# Définir le répertoire de travail
+WORKDIR /var/www/html/
+
+# Installer curl pour télécharger Composer et bash pour exécuter des scripts
+# NOTE: bash pourra également être utilisé pour exécuter tout type de commande ou script dans le conteneur
+RUN apk update && apk add --no-cache \
+	curl \
+	bash
+
+# Installer les extensions PHP nécessaires à Symfony
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Copier les fichiers de configuration de PHP
+COPY .docker/symfony/conf/ /usr/local/etc/php/
+
+# Télécharger Composer dans le répertoire d'exécutables pour pouvoir l'utiliser depuis n'importe où
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Puisque Nginx passe les requêtes à PHP-PFM, c'est lui qui doit contenir le code source de l'application
+# On passe le reste des fichiers avant l'installation
+COPY symfony/ ./
+
+# Définir la variable d'environnement pour autoriser Composer à s'exécuter en tant que super-utilisateur
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Installer les dépendances de Composer (en le préparant pour le déploiement en production)
+RUN composer install --no-interaction --no-dev --optimize-autoloader --no-scripts
+# À utiliser en PROD:
+# --no-interaction: ne pas demander d'interaction avec l'utilisateur
+# --no-dev: ne pas installer les dépendances de développement
+# --optimize-autoloader: optimiser l'auto-chargement des classes)
+# --no-scripts: ne pas exécuter les scripts Composer 
+#	(qui ne sont pas nécessaires en production, voir "scripts" dans composer.json)
+
+# Copier le script de point d'entrée
+COPY .docker/symfony/init/prod/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Donner les droits d'exécution au script de point d'entrée
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Exécuter le script de point d'entrée à chaque démarrage du conteneur
+# NOTE: Rajouter un ENTRYPOINT dans le Dockerfile écrase celui de l'image parente
+ENTRYPOINT [ "entrypoint.sh" ]
+
+# Démarrer PHP-FPM
+# NOTE: Le fait de préciser un nouvel ENTRYPOINT annule le CMD de l'image parente
+#		et nécessite de redéfinir la commande de démarrage du conteneur
+CMD [ "php-fpm" ]
+
+# Rendre le serveur PHP accessible sur le port 9000
+EXPOSE 9000

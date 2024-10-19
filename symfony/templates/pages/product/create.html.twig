@@ -1,0 +1,63 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Créer un produit' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+	<script src="/assets/common/js/dynamicMediaForm.js"></script>
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_product_list'), 'name': 'Gestion des produits' },
+		{ 'link': path('app_product_create'), 'name': 'Créer' }
+	]} 
+	%}
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+		<div class="product">
+			{{ form_start(creationForm) }}
+			{{ form_errors(creationForm) }}
+			<div class="medias">
+				<div class="preview">
+					{% include 'icons/menus/help.svg' %}
+				</div>
+				<div class="gallery">
+				</div>
+				{# Ce widget ne génère pas réellement un champ de saisie, 
+				il crée un prototype de champ pour les formulaires dynamiques (pour ajouter des images supplémentaires) #}
+				{{ form_widget(creationForm.medias) }}
+			</div>
+			<div class="info">
+				<h2>{{ form_errors(creationForm.name) }}
+					{{ form_widget(creationForm.name) }}</h2>
+				<p>{{ form_errors(creationForm.price) }}
+					{{ form_widget(creationForm.price) }}
+					€</p>
+				<p>{{ form_errors(creationForm.category) }}
+					Catégorie :
+					{{ form_widget(creationForm.category) }}</p>
+				<p>{{ form_errors(creationForm.available) }}
+					Disponibilité:
+					{{ form_widget(creationForm.available) }}</p>
+				<h2>Description</h2>
+				<p>{{ form_errors(creationForm.description) }}
+					{{ form_widget(creationForm.description) }}</p>
+				{{ form_widget(creationForm.save) }}
+			</div>
+			{{ form_end(creationForm) }}
+		</div>
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}
