@@ -1,0 +1,47 @@
+		{% block header %}
+			<script src="/assets/style/js/toggleDarkTheme.js"></script>
+			<header class="header">
+			<nav>
+				<div class="branding"><a class="logo" href="{{ path('app_home') }}"><img src="/assets/img/logo.png" alt="Logo"></a><h1 class="slogan">{{slogan}}</h1></div>{# Do not put space to avoid overflow of the navigation bar
+				 #}<div class="search">
+				<form action="{{ path('app_product_search') }}" method="GET">
+					<input name="name" type="text" placeholder="Search..." class="input" value="{{ app.request.query.get('name') }}">
+					{# Include in the request the parameters already present in the URL #}
+					{# This avoids losing filters during a new search #}
+					{% for key, value in app.request.query.all %}
+						{% if key != 'name' %}
+						<input type="hidden" name="{{ key }}" value="{{ value }}"> {% endif %}
+					{% endfor %}
+					<button type="submit" class="btn">{% include 'icons/menus/search.svg' %}</button>
+				</form>{# Do not put space to avoid overflow of the navigation bar
+				 #}</div><ul class="user-menu" id="userMenu">
+					<li {% if currentRoute == 'app_cart_show' %}class="current"{% endif %}>
+						<a href="{{ path('app_cart_show') }}">
+							{% include 'icons/menus/cart.svg' %}
+						</a>
+					</li>
+					<li {% if currentRoute == 'app_user_edit' %}class="current"{% endif %}>
+						<a href="{{ path('app_user_show') }}">
+							{% include 'icons/menus/account.svg' %}
+						</a>
+					</li>
+					<li {% if currentRoute == 'app_help' %}class="current"{% endif %}>
+						<a href="{{ path('app_help') }}">
+							{% include 'icons/menus/help.svg' %}
+						</a>
+					</li>
+				</ul>
+			</nav>
+			<div class="breadcrumbs">
+			<ul>
+			{% for breadcrumb in breadcrumbs %}
+				{% if loop.last %}
+					<li class="current">{{breadcrumb.name}}</li>
+				{% else %}
+					<li><a href="{{breadcrumb.link}}">{{breadcrumb.name}}</a></li>
+				{% endif %}
+			{% endfor %}
+			</div>
+			</header>
+
+			{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Test Page: Home' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Home' },
+	{ 'link': path(currentRoute), 'name': currentPage }
+]} %}
+
+	<section class="section">
+		<div class="intro">
+			<div class="title">
+				<h1>{{ currentPage }}</h1>
+				<hr>
+			</div>
+			{# If testList is defined, display the list of tests #}
+			{% if testList is defined %}
+			<h2>List of tests</h2>
+			<ul>
+				{% for key, value in testList %}
+				<li><a href="{{ value }}">{{ key }}</a></li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+		</div>
+
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

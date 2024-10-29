@@ -1,0 +1,57 @@
+.product-list {
+	display: inline-block;
+	text-align: left;
+	vertical-align: top;
+	padding: 15px 30px;
+	margin: auto 2.5%;
+	max-width: 700px;
+	min-width: 50%;
+
+	.row {
+		position: relative;
+		display: block;
+	}
+
+	.empty-cart {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: rgba(var(--link-content));
+		font-family: inherit;
+	}
+	.table{
+		// Prevent the table from overflowing the page
+		table-layout: fixed;
+		overflow: auto;
+		td{
+			img, video{
+				max-height: 100px;
+				max-width: 100px;
+			}
+		}
+	}
+	
+	hr {
+		width: 80%;
+	}
+
+	.summary {
+		h1, h2, h3, h4, h5, h6 {
+			margin: 5px 0;
+			position: relative;
+		}
+		.btn {
+			width: 100%;
+		}
+		.right{
+			position: absolute;
+			right: 0;
+			
+			// Remove specific boldness (specific to the font used (here: Rationale))
+			text-shadow: none;
+		}
+	}
+}

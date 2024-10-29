@@ -1,0 +1,101 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = app.request.query.get('name') ? 'Results for "' ~ app.request.query.get('name') ~ '"' : 'Search' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Home' },
+	{ 'link': path(currentRoute), 'name': currentPage }
+]} %}
+
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+	{% include 'structure/notifications.html.twig' %}
+
+		<div class="filters">
+			<form action="{{ path('app_product_search') }}" method="get">
+				{% if categories is defined %}
+					<div class="filter">
+						<label class="label" for="category">Category</label>
+						<select class="select" name="category" id="category">
+							<option value="">All categories</option>
+							{% for category in categories %}
+								<option value="{{ category.id }}" {% if app.request.query.get('category') == category.id %} selected {% endif %}>{{ category.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				{% endif %}
+				{% if priceRange is defined %}
+					<div class="filter">
+						<label class="label" for="minPrice">Minimum price</label>
+						<input class="input" type="number" name="minPrice" value="{{ app.request.query.get('minPrice') ?? priceRange.min }}" placeholder="{{ priceRange.min }}">
+					</div>
+					<div class="filter">
+						<label class="label" for="maxPrice">Maximum price</label>
+						<input class="input" type="number" name="maxPrice" value="{{ app.request.query.get('maxPrice') ?? priceRange.max }}" placeholder="{{ priceRange.max }}">
+					</div>
+				{% endif %}
+				<div class="filter">
+					<label class="label" for="order">Sort by</label>
+					<select class="select" name="order" id="order">
+						<option value="name" {% if app.request.query.get('order') == 'name' %} selected {% endif %}>Name</option>
+						<option value="price" {% if app.request.query.get('order') == 'price' %} selected {% endif %}>Price</option>
+					</select>
+				</div>
+				<div class="filter">
+					<label class="label" for="direction">Order</label>
+					<select class="select" name="direction" id="direction">
+						<option value="asc" {% if app.request.query.get('direction') == 'asc' %} selected {% endif %}>Ascending</option>
+						<option value="desc" {% if app.request.query.get('direction') == 'desc' %} selected {% endif %}>Descending</option>
+					</select>
+				</div>
+				{# Hidden field to retain the name in the URL during filtering #}
+				<input type="hidden" name="name" value="{{ app.request.query.get('name') }}">
+				<button class="btn btn-secondary" type="submit">Filter</button>
+			</div>
+		</form>
+		{% if items is not defined %}
+			<p class="notification error">An error occurred</p>
+		{% else %}
+			{% if items is empty %}
+				<p>No results for your search</p>
+			{% else %}
+				<div class="items">
+					{% for item in items %}
+						<a class="item" href="{{ path('app_product_show', {'id': item.id}) }}">
+							<div class="preview">
+								{% if item.medias is empty %}
+									{% include 'icons/menus/help.svg' %}
+								{% else %}
+									{# If the media is an image #}
+									{% if 'image' in item.medias[0].type %}
+										<img src="{{ item.medias[0].path }}" alt="{{ item.medias[0].alt }}" title="{{ item.name }}">
+									{# If the media is a video #}
+									{% elseif 'video' in item.medias[0].type %}
+										<video src="{{ item.medias[0].path }}" alt="{{ item.name }}" muted loop autoplay preload></video>
+									{# If the media type is not supported #}
+									{% else %}
+										{% include 'icons/menus/help.svg' %}
+									{% endif %}
+								{% endif %}
+							</div>
+							<div class="info">
+								<h2>{{ item.name }}</h2>
+								<p>{{ item.price }} €</p>
+							</div>
+						</a>
+					{% endfor %}
+				</div>
+			{% endif %}
+		{% endif %}
+	</div>
+</section>
+
+{% include 'structure/footer.html.twig' %}{% endblock %}

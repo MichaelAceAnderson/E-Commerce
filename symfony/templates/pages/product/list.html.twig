@@ -1,0 +1,80 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Product Administration Page' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_product_list'), 'name': 'Product Management' }
+	]} 
+	%}
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+
+	<h2>Product List</h2>
+
+	{% include 'structure/notifications.html.twig' %}
+	<a href="{{ path('app_product_create') }}" class="btn btn-secondary">Create a Product</a>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Image(s)</th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Price</th>
+				<th>Availability</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for product in products %}
+			<tr>
+				<td>{{ product.id }}</td>
+				<td>{% if product.medias is empty %}
+					{% include 'icons/menus/help.svg' %}
+				{% else %}
+					{% for media in product.medias %}
+						{# If the media is an image #}
+						{% if 'image' in media.type %}
+							<img src="{{ media.path }}" alt="{{ media.alt }}" title="{{ media.alt }}">
+						{# If the media is a video #}
+						{% elseif 'video' in media.type %}
+							<video src="{{ media.path }}" title="{{ media.alt }}" muted loop autoplay preload></video>
+						{# If the media type is not supported #}
+						{% else %}
+							{% include 'icons/menus/help.svg' %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}</td>
+				<td>{{ product.name }}</td>
+				<td>{{ product.description }}</td>
+				<td>{{ product.price }}</td>
+				<td>{{ product.available ? '✔️' : '❌' }}</td>
+				<td>
+					<a href="{{ path('app_product_show', {'id': product.id}) }}" target="_blank" class="btn btn-secondary">View</a>
+					<a href="{{ path('app_product_edit', {'id': product.id}) }}" target="_blank" class="btn btn-secondary">Edit</a>
+					<form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Are you sure you want to delete the product {{ product.name }}?')">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+						<button class="btn btn-danger">Delete</button>
+					</form>
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="7">No products found</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	</section>
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

@@ -1,0 +1,66 @@
+server {
+	# Server listening port
+	listen 80;
+	# Server domain
+	server_name localhost;
+
+	# Location of site files
+	root /var/www/html/public;
+
+	# Log files
+	error_log /var/log/nginx/error_symfony.log;
+	access_log /var/log/nginx/access_symfony.log;
+
+	# Default index file
+	index index.php;
+
+	# Character encoding to use for static files
+	charset utf-8; 
+
+	location / {
+		# Try to serve the requested URI first, otherwise use index.php with the request arguments
+		try_files $uri /index.php$is_args$args;
+	}
+
+	location ~ ^/index\.php(/|$) {
+		# Location of the PHP script processing socket (docker-service-name:port)
+		# NOTE: Nginx does not natively support environment variables,
+		# so we use envsubst to replace them with their value at container startup
+		fastcgi_pass ${PHP_SERVICE_HOST}:${PHP_SERVICE_PORT};
+		# Separation of script path and arguments
+		fastcgi_split_path_info ^(.+\.php)(/.*)$;
+		# PHP script processing parameters
+		include fastcgi_params;
+
+		##
+		# Customization of FastCGI parameters
+		##
+		# Parameters for the location of the requested file (useful for redirects and routing)
+		fastcgi_param REQUEST_URI $request_uri;
+		fastcgi_param DOCUMENT_URI $document_uri;
+		# Location of the PHP file to process
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		# Information about the script path
+		fastcgi_param PATH_INFO $fastcgi_path_info;
+		# Root directory of the site
+		fastcgi_param DOCUMENT_ROOT $document_root;
+		# Request protocol
+		fastcgi_param SERVER_PROTOCOL $server_protocol;
+		# Treat all requests as if they were HTTP
+		fastcgi_param HTTPS off;
+		# Number and size of FastCGI buffers
+		fastcgi_buffers 16 16k;
+		# Maximum size of FastCGI buffers
+		fastcgi_buffer_size 32k;
+	}
+
+	location ~ \.php$ {
+		# Deny direct access to PHP files
+		return 404;
+	}
+
+	location ~ /\.ht {
+		# Deny access to .ht files
+		deny all;
+	}
+}

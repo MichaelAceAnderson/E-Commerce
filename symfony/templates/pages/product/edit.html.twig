@@ -1,0 +1,94 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Edit a product' ~ (product.name ? ': ' ~ product.name : '') %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_product_list'), 'name': 'Product Management' },
+			{ 'link': path('app_product_show', {'id': product.id}), 'name': product.name },
+			{ 'link': product.id ? path('app_product_edit', {'id': product.id}) : '#', 'name': 'Edit' }
+		]} 
+	%}
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+
+		{% if product is defined %}
+			<div class="product">
+				{{ form_start(editionForm) }}
+				{{ form_errors(editionForm) }}
+				<div class="medias">
+					{% if product.medias is empty %}
+						<div class="preview">
+							{% include 'icons/menus/help.svg' %}
+						</div>
+					{% else %}
+						<div class="preview">
+							{# If the media is an image #}
+							{% if 'image' in product.medias[0].type %}
+								<img src="{{ product.medias[0].path }}" alt="{{ product.medias[0].alt }}" title="{{ product.medias[0].alt }}">
+							{# If the media is a video #}
+							{% elseif 'video' in product.medias[0].type %}
+								<video src="{{ product.medias[0].path }}" title="{{ product.medias[0].alt }}" muted loop autoplay preload></video>
+							{# If the media is of an unsupported type #}
+							{% else %}
+								{% include 'icons/menus/help.svg' %}
+							{% endif %}
+						</div>
+						<div class="gallery">
+							{# Display additional images #}
+							{% for media in product.medias|slice(1) %}
+								{# If the media is an image #}
+								{% if 'image' in media.type %}
+									<img src="{{ media.path }}" alt="{{ media.alt }}" title="{{ media.alt }}">
+								{# If the media is a video #}
+								{% elseif 'video' in media.type %}
+									<video src="{{ media.path }}" title="{{ media.alt }}" muted loop autoplay preload></video>
+								{# If the media is of an unsupported type #}
+								{% else %}
+									{% include 'icons/menus/help.svg' %}
+								{% endif %}
+							{% endfor %}
+						</div>
+						<div>
+							{{ form_row(editionForm.medias) }}
+						</div>
+					{% endif %}
+				</div>
+				<div class="info">
+					<h2>{{ form_errors(editionForm.name) }}
+						{{ form_widget(editionForm.name) }}</h2>
+					<p>{{ form_errors(editionForm.price) }}
+						{{ form_widget(editionForm.price) }}
+						€</p>
+					<p>{{ form_errors(editionForm.category) }}
+						Category:
+						{{ form_widget(editionForm.category) }}</p>
+					<p>{{ form_errors(editionForm.available) }}
+						Availability:
+						{{ form_widget(editionForm.available) }}</p>
+					<h2>{{ form_errors(editionForm.description) }}
+						Description</h2>
+					<p>{{ form_widget(editionForm.description) }}</p>
+
+					{{ form_row(editionForm.save) }}
+				</div>
+				{{ form_end(editionForm) }}
+			{% else %}
+				<a href="{{ path('app_product_list') }}">Click
+					<button class="btn btn-secondary">here</button>
+					to return to the product list</a>
+			{% endif %}
+		</div>
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

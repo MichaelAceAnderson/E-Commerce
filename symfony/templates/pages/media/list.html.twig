@@ -1,0 +1,69 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Media Administration Page' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_media_list'), 'name': 'Media Management' }
+	]} 
+	%}
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+
+	<h2>Media List</h2>
+
+	{% include 'structure/notifications.html.twig' %}
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Image</th>
+				<th>Path</th>
+				<th>Description</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for media in medias %}
+			<tr>
+				<td>{{ media.id }}</td>
+				<td>
+					{# If the media is an image #}
+					{% if 'image' in media.type %}
+						<img src="{{ media.path }}" alt="{{ media.alt }}" title="{{ media.alt }}">
+					{# If the media is a video #}
+					{% elseif 'video' in media.type %}
+						<video src="{{ media.path }}" title="{{ media.alt }}" muted loop autoplay preload></video>
+					{# If the media type is not supported #}
+					{% else %}
+						{% include 'icons/menus/help.svg' %}
+					{% endif %}
+				</td>
+				<td>{{ media.path }}</td>
+				<td>{{ media.alt }}</td>
+				<td>
+					<a href="{{ media.path }}" target="_blank" class="btn btn-secondary">View</a>
+					<form method="post" action="{{ path('app_media_delete', {'id': media.id}) }}" onsubmit="return confirm('Are you sure you want to delete the media {{ media.path }}?')">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ media.id) }}">
+						<button class="btn btn-danger">Delete</button>
+					</form>
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="7">No media found</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	</section>
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

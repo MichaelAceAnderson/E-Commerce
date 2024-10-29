@@ -1,0 +1,33 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Create an account' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path(currentRoute), 'name': currentPage }
+	]} 
+	%}
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+	{% include 'structure/notifications.html.twig' %}
+
+		<div class="login">
+			{{ form_errors(registrationForm) }}
+			{{ form_start(registrationForm) }}
+			{{ form_end(registrationForm) }}
+
+			<p>Already have an account?
+				<a href="{{ path('app_user_login') }}">Log in</a>
+			</p>
+
+		</div>
+	{% endblock %}

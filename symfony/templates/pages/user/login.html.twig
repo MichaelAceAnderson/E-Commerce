@@ -1,0 +1,36 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Login' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path(currentRoute), 'name': currentPage }
+	]} 
+	%}
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+	{% include 'structure/notifications.html.twig' %}
+
+		{% if app.user %}
+			<div class="notification info">You are already logged in! Click <a href="{{ path('app_user_show') }}">here</a> to view your profile.</div>
+		{% else %}
+		<div class="login">
+			{{ form_start(loginForm) }}
+				{{ form_row(loginForm.email, {'value': last_username ?? ''}) }}
+				{{ form_row(loginForm.password) }}
+				{{ form_widget(loginForm.submit) }}
+			{{ form_end(loginForm) }}
+			<p>Don't have an account? <a href="{{ path('app_user_register') }}">Sign up</a></p>
+		</div>
+		{% endif %}
+	</section>
+{% endblock %}

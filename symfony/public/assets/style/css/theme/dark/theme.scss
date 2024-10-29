@@ -1,0 +1,145 @@
+// ==== Dark Theme ====
+// Note: All variables are in rgba format
+// to facilitate color manipulation
+// except for background colors (bg-*)
+// to be able to use them with different opacities
+.dark-theme {
+	// Theme supported by the browser
+	color-scheme: dark;
+
+	// Primary
+	--bg-primary: 0, 37, 71;
+	--text-primary: 255, 255, 255, 1.0;
+	--link-primary: 255, 255, 255, 1.0;
+	--link-primary-hover: 200, 200, 200, 1.0;
+
+	// Secondary
+	--bg-secondary: 0, 0, 0;
+	--text-secondary: 255, 255, 255, 1.0;
+	--link-secondary: 255, 255, 255, 1.0;
+	--link-secondary-hover: 200, 200, 200, 1.0;
+
+	// Tertiary
+	--bg-tertiary: 50, 50, 50;
+	--text-tertiary: 255, 255, 255, 1.0;
+
+	// Content
+	--bg-content: 25, 25, 25;
+	--text-content: 255, 255, 255, 1.0;
+	--link-content: 30, 144, 255, 1.0;
+	--img-content: 200, 200, 200, 1.0;
+	--separator: 187, 187, 187, 1.0;
+	--bg-element: 238, 238, 238, 1.0;
+	--bg-item: 34, 34, 34, 1.0;
+	--text-item: var(--text-content);
+
+	// ==== Input Fields ====
+	--input-transition-in: 0.5s;
+	--input-transition-out: 0.3s;
+	--input-bg: 30, 30, 30, 1.0;
+	--input-bg-hover: 40, 40, 40, 1.0;
+	--input-bg-active: 25, 25, 25, 1.0;
+	--input-placeholder: 136, 136, 136, 1.0;
+	--input-border: var(--separator);
+	--input-border-hover: 100, 100, 100, 1.0;
+	--input-border-active: 30, 144, 255, 1.0;
+
+	// ==== Buttons ====
+	// Primary
+	--btn-primary-bg: 50, 50, 50, 0.7;
+	--btn-primary-text: 255, 255, 255, 1.0;
+	--btn-primary-border: 0, 0, 0, 0.2;
+	--btn-primary-bg-hover: 70, 70, 70, 0.9;
+	--btn-primary-text-hover: 255, 255, 255, 1.0;
+	--btn-secondary-border-hover: var(--btn-secondary-border);
+
+	// Secondary
+	--btn-secondary-bg: 0, 0, 0, 1.0;
+	--btn-secondary-text: 255, 255, 255, 1.0;
+	--btn-secondary-border: 0, 0, 0, 0.2;
+	--btn-secondary-bg-hover: 70, 70, 70, 0.7;
+	--btn-secondary-text-hover: 255, 255, 255, 1.0;
+	--btn-secondary-border-hover: var(--btn-secondary-border);
+
+	// Danger
+	--btn-danger-bg: 220, 0, 0, 0.8;
+	--btn-danger-text: 255, 255, 255, 1.0;
+	--btn-danger-border: 0, 0, 0, 0.2;
+	--btn-danger-bg-hover: 255, 0, 0, 0.8;
+	--btn-danger-text-hover: 255, 255, 255, 1.0;
+
+	// ==== Fonts ====
+	--global-font-family: 'Rationale', 'Agency FB', 'Calibri', sans-serif;
+
+	// Base calculation for font sizes in "em" units
+	font-size: 14px;
+
+	@font-face {
+		font-family: 'Rationale';
+		src: url(/assets/style/fonts/Rationale/Rationale-Regular.ttf) format('ttf'),
+			url(/assets/style/fonts/Rationale/Rationale-Regular.woff2) format('woff2');
+	}
+
+	b,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		// Bold doesn't work in the used font (Rationale)
+		// We create a fake one using shadow
+		font-weight: inherit;
+		text-shadow: -0.3px 0, 0 0.3px, 0.3px 0, 0 -0.3px currentColor;
+	}
+
+	// By default, calculated relative to the html font-size
+	// otherwise equal to the parent element's font-size (container)
+	//⚠️Note: Fonts should be applied to containers, not to the elements themselves!
+	p,
+	button,
+	input,
+	select,
+	textarea,
+	label {
+		font-size: 1em;
+	}
+
+	h1 {
+		font-size: 1.5em;
+	}
+
+	h2 {
+		font-size: 1.4em;
+	}
+
+	h3 {
+		font-size: 1.3em;
+	}
+
+	h4 {
+		font-size: 1.2em;
+	}
+
+	h5 {
+		font-size: 1.1em;
+	}
+
+	h6 {
+		font-size: 1em;
+	}
+
+	hr {
+		border-color: rgba(var(--separator));
+	}
+
+	a {
+		color: rgba(var(--link-content));
+		text-decoration: none;
+		transition: color var(--input-transition-in);
+
+		&:hover {
+			color: rgba(var(--input-transition-hover));
+		}
+	}
+}

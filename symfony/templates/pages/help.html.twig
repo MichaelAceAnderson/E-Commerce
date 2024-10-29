@@ -1,0 +1,48 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Help & Support' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Home' },
+	{ 'link': path(currentRoute), 'name': currentPage }
+]} %}
+
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+
+		<h2>How to place an order?</h2>
+		<ol>
+			<li>Choose the products you want to buy by clicking the "Add to cart" button.</li>
+			<li>Once you have finished your selection, click the "Cart" button at the top right of the page.</li>
+			<li>You can then check the contents of your cart and modify the quantities if needed.</li>
+			<li>Once you have checked your cart, click the "Order" button.</li>
+			<li>You can then log in to your account if you have one, or create an account if you don't.</li>
+			<li>Once logged in, you can choose your delivery address and payment method.</li>
+			<li>Finally, click the "Confirm order" button to finalize your purchase.</li>
+		</ol>
+
+		<h2>How to track my order?</h2>
+		<ol>
+			<li>Log in to your account.</li>
+			<li>Click on "My orders" in the left menu.</li>
+			<li>You can then see the status of your orders and the details of each one.</li>
+			<li>Initially, your order will be pending validation.</li>
+			<li>Once validated, the order will be pending preparation.</li>
+			<li>Finally, once your order is ready, it will be pending delivery.</li>
+		</ol>
+
+		<h2>In case of problems or questions, who to contact?</h2>
+		<p>If you have any questions or problems, contact the site administrator.</p>		
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

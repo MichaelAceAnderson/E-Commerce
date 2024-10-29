@@ -1,0 +1,144 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'My Cart' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Home' },
+	{ 'link': path('app_user_show'), 'name': 'My Account' },
+	{ 'link': path(currentRoute), 'name': currentPage }
+]} %}
+
+	<section class="section center">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+		{% if cart is defined %}
+			<div class="order-steps">
+				<div class="step active">
+					<div class="circle">
+						{% include 'icons/menus/cart.svg' %}
+					</div>
+					<p>1. Cart</p>
+				</div>
+				<div class="step">
+					<div class="circle">
+						{% include 'icons/menus/home.svg' %}
+					</div>
+					<p>2. Shipping Information</p>
+				</div>
+				<div class="step">
+					<div class="circle">
+						{% include 'icons/menus/credit_card.svg' %}
+					</div>
+					<p>3. Payment</p>
+				</div>
+			</div>
+
+			<div class="box product-list">
+				<div class="row">
+					<div class="title">
+						<h2>Cart</h2>
+						<hr>
+					</div>
+					<form action="{{ path('app_cart_empty') }}" method="post">
+						<button type="submit" class="empty-cart">Empty Cart</button>
+					</form>
+				</div>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Product</th>
+							<th>Unit Price</th>
+							<th>Quantity</th>
+							<th>Total Price</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% set total = 0 %}
+						{% set nbItems = 0 %}
+						{% for productQuantityForm in formViews %}
+							{% set productQuantity = productQuantityForm.vars.data %}
+							{% set total = total + productQuantity.product.price * productQuantity.quantity %}
+							{% set nbItems = nbItems + productQuantity.quantity %}
+
+							<tr>
+								<td>
+									<a href="{{ path('app_product_show', {'id': productQuantity.product.id}) }}" target="_blank">
+										{% if productQuantity.product.medias[0] is defined %}
+											{# If the media is an image #}
+											{% if 'image' in productQuantity.product.medias[0].type %}
+												<img src="{{ productQuantity.product.medias[0].path }}" alt="{{ productQuantity.product.name }}">
+											{# If the media is a video #}
+											{% elseif 'video' in productQuantity.product.medias[0].type %}
+												<video src="{{ productQuantity.product.medias[0].path }}" alt="{{ productQuantity.product.name }}" muted loop autoplay preload></video>
+											{# If the media is of an unsupported type #}
+											{% else %}
+												{% include 'icons/menus/help.svg' %}
+											{% endif %}
+										{% else %}
+											<p>{{ productQuantity.product.name }}</p>
+										{% endif %}
+									</a>
+								</td>
+								<td>{{ productQuantity.product.price }} €</td>
+								<td>
+									{{ form_start(productQuantityForm) }}
+									{{ form_errors(productQuantityForm) }}
+									{{ form_errors(productQuantityForm.quantity) }}
+									{{ form_widget(productQuantityForm.quantity) }}
+									{{ form_widget(productQuantityForm.submit) }}
+									{{ form_end(productQuantityForm) }}
+								</td>
+								<td>{{ productQuantity.product.price * productQuantity.quantity }} €</td>
+								<td>
+									<form action="{{ path('app_cart_remove_product', {'id': productQuantity.product.id}) }}" method="post">
+										<button type="submit" class="btn btn-danger">Remove</button>
+									</form>
+								</td>
+							</tr>
+
+						{% else %}
+							<tr>
+								<td colspan="5">Your cart is empty!</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<hr>
+				<div class="summary">
+					<h3>Total Quantity of Items:
+						<span class="right">{{ nbItems }}</span>
+					</h3>
+					<h3>Shipping Cost:
+						<span class="right">{{ estimatedDeliveryCost }}</span>
+					</h3>
+					<h3>Total:
+						<span class="right">{{ total }}€</span>
+					</h3>
+
+					{% if formViews|length > 0 %}
+						<form action="{{ path('app_order_create', {'cartId': cart.id}) }}" method="GET">
+							<button class="btn btn-secondary">
+								{% include 'icons/menus/credit_card.svg' %}
+								Place Order
+							</button>
+						</form>
+					{% endif %}
+				</div>
+			</div>
+		</form>
+
+	{% else %}
+		<p class="notification info">You have no cart!</p>
+	{% endif %}
+</section>
+
+{% include 'structure/footer.html.twig' %}{% endblock %}

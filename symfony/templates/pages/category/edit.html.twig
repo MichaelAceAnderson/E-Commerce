@@ -1,0 +1,57 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Edit a category' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_category_list'), 'name': 'Category Management' },
+		{ 'link': path('app_category_create'), 'name': 'Edit' }
+	]} 
+	%}
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+
+
+		<h2>Edit the category</h2>
+
+		{{ form_start(editionForm) }}
+		<div class="category">
+			<div class="medias">
+				<div class="preview">
+					{% if editionForm.media.vars.value is not null %}
+						{# If the media is an image #}
+						{% if 'image' in editionForm.media.vars.value.type %}
+							<img src="{{ editionForm.media.vars.value.path }}" alt="{{ editionForm.media.vars.value.alt }}" title="{{ editionForm.media.vars.value.alt }}">
+						{# If the media is a video #}
+						{% elseif 'video' in editionForm.media.vars.value.type %}
+							<video src="{{ editionForm.media.vars.value.path }}" title="{{ editionForm.media.vars.value.alt }}" muted loop autoplay preload></video>
+						{# If the media type is not supported #}
+						{% else %}
+							{% include 'icons/menus/help.svg' %}
+						{% endif %}
+					{% endif %}
+				</div>
+				{{ form_row(editionForm.media) }}
+			</div>
+			<div class="info">
+				{{ form_errors(editionForm) }}
+				<h2>{{ form_row(editionForm.name) }}</h2>
+				{{ form_row(editionForm.description) }}
+				{{ form_row(editionForm.save) }}
+			</div>
+		</div>
+		{{ form_end(editionForm) }}
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

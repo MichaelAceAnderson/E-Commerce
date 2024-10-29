@@ -1,0 +1,100 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = product is defined ? 'Product Page: ' ~ product.name : 'Product not found' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% if product is defined %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_product_search'), 'name': 'Products' },
+		{ 'link': path('app_product_search', {'category': product.category.id}), 'name': product.category.name },
+		{ 'link': path(currentRoute, {'id': product.id}), 'name': product.name },
+	]
+	} 
+	%}
+	{% else %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_product_search'), 'name': 'Products' },
+		{ 'link': '', 'name': 'Product not found' }
+		]} 
+	%}
+	{% endif %}
+
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+	{% include 'structure/notifications.html.twig' %}
+			
+			{% if product is defined %}
+				<div class="product">
+					<div class="medias">
+						{% if product.medias is empty %}
+							<div class="preview">
+								{% include 'icons/menus/help.svg' %}
+							</div>
+						{% else %}
+							<div class="preview">
+								{# If the media is an image #}
+								{% if 'image' in product.medias[0].type %}
+									<img src="{{ product.medias[0].path }}" alt="{{ product.medias[0].alt }}" title="{{ product.medias[0].alt }}">
+								{# If the media is a video #}
+								{% elseif 'video' in product.medias[0].type %}
+									<video src="{{ product.medias[0].path }}" title="{{ product.medias[0].alt }}" muted loop autoplay preload></video>
+								{# If the media is of an unsupported type #}
+								{% else %}
+									{% include 'icons/menus/help.svg' %}
+								{% endif %}
+							</div>
+							<div class="gallery">
+								{# Display additional images #}
+								{% for media in product.medias|slice(1) %}
+									{# If the media is an image #}
+									{% if 'image' in media.type %}
+										<img src="{{ media.path }}" alt="{{ media.alt }}" title="{{ media.alt }}">
+									{# If the media is a video #}
+									{% elseif 'video' in media.type %}
+										<video src="{{ media.path }}" title="{{ media.alt }}" muted loop autoplay preload></video>
+									{# If the media is of an unsupported type #}
+									{% else %}
+										{% include 'icons/menus/help.svg' %}
+									{% endif %}
+								{% endfor %}
+							</div>
+						{% endif %}
+					</div>
+					<div class="info">
+						<h2>{{ product.name }} {% if is_granted('ROLE_ADMIN') %}[<a href="{{ path('app_product_edit', {'id': product.id}) }}">Edit</a>]{% endif %}</h2>
+						{% if product.available %}
+							<p>{{ product.price }} €</p>
+						{% endif %}
+							<p>Category: <a href="{{ path('app_product_search', { 'category': product.category.id }) }}">{{ product.category.name }}</a></p>
+							<p>{{ product.available ? 'In stock' : 'Out of stock' }}</p>
+							<h2>Description</h2>
+							<p>{{ product.description }}</p>
+						
+						{% if product.available %}
+							<div class="actions">
+								<form action="{{ path('app_cart_add_product', { 'id': product.id }) }}" method="post">
+									<input class="input" type="number" name="quantity" value="1" min="1" max="10">
+									<button class="btn btn-secondary" type="submit">Add to cart</button>
+								</form>
+							</div>
+						{% endif %}
+
+			{% else %}
+				<p>Click <a class="btn btn-secondary" href="{{ path('app_home') }}">here</a> to return to the homepage</p>
+			{% endif %}
+
+
+				</div>
+			</section>
+
+			{% include 'structure/footer.html.twig' %}
+		{% endblock %}
