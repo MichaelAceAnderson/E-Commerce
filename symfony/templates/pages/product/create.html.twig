@@ -1,0 +1,63 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Create a product' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+	<script src="/assets/common/js/dynamicMediaForm.js"></script>
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_product_list'), 'name': 'Product Management' },
+		{ 'link': path('app_product_create'), 'name': 'Create' }
+	]} 
+	%}
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+		<div class="product">
+			{{ form_start(creationForm) }}
+			{{ form_errors(creationForm) }}
+			<div class="medias">
+				<div class="preview">
+					{% include 'icons/menus/help.svg' %}
+				</div>
+				<div class="gallery">
+				</div>
+				{# This widget does not actually generate an input field, 
+				it creates a prototype field for dynamic forms (to add additional images) #}
+				{{ form_widget(creationForm.medias) }}
+			</div>
+			<div class="info">
+				<h2>{{ form_errors(creationForm.name) }}
+					{{ form_widget(creationForm.name) }}</h2>
+				<p>{{ form_errors(creationForm.price) }}
+					{{ form_widget(creationForm.price) }}
+					€</p>
+				<p>{{ form_errors(creationForm.category) }}
+					Category:
+					{{ form_widget(creationForm.category) }}</p>
+				<p>{{ form_errors(creationForm.available) }}
+					Availability:
+					{{ form_widget(creationForm.available) }}</p>
+				<h2>Description</h2>
+				<p>{{ form_errors(creationForm.description) }}
+					{{ form_widget(creationForm.description) }}</p>
+				{{ form_widget(creationForm.save) }}
+			</div>
+			{{ form_end(creationForm) }}
+		</div>
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

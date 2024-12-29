@@ -1,0 +1,30 @@
+# Note: this file must be placed in the Docker image build context
+
+# ================= DEVELOPMENT ENVIRONMENT =================
+# Ignore Docker files
+.docker/**/Dockerfile
+.docker/**/.env*
+# Ignore all files and folders starting with ".git"
+**/.git*
+# Ignore all markdown information files
+**/*.md
+# Ignore Docker-related shell scripts
+**/docker-*.sh
+# Ignore the Makefile
+Makefile
+# ===========================================================
+
+# ================= APPLICATION FILES =======================
+# Ignore host Composer dependency and cache files
+# (Composer installation is done in the container)
+symfony/vendor/
+symfony/var/
+
+# Ignore CSS and SCSS files except general.css
+**/*.css
+**/*.scss
+!**/general.css
+
+# Ignore local MariaDB database volume data
+.docker/mariadb/data
+# ===========================================================

@@ -1,0 +1,74 @@
+.btn, a.btn{
+	display: inline-block;
+	text-align: center;
+	transition: var(--input-transition-out);
+	background-color: transparent;
+	color: rgba(var(--btn-primary-text));
+	border: 4px solid rgba(var(--btn-primary-border));
+	padding: 20px;
+	font-family: inherit;
+	font-weight: normal;
+
+	*{
+		// Remove bold (specific to the font used (here: Rationale))
+		text-shadow: -0.3px 0, 0 0.3px, 0.3px 0, 0 -0.3px currentColor;
+	}
+
+	&:hover{
+		cursor: pointer;
+		transition: var(--input-transition-in);
+	}
+	
+	svg, img{
+		max-width: 100%;
+		vertical-align: middle;
+	}
+
+	img{
+		height: 1em;
+	}
+	svg{
+		height: 2em;
+	}
+
+	h1, h2, h3, h4, h5, h6{
+		margin: 0;
+		padding: 0;
+	}
+
+	&-primary{
+		background-color: rgba(var(--btn-primary-bg));
+		color: rgba(var(--btn-primary-text-hover));
+		border-color: rgba(var(--btn-primary-border));
+
+		&:hover{
+			cursor: pointer;
+			background-color: rgba(var(--btn-primary-bg-hover));
+			color: rgba(var(--btn-primary-text-hover));
+			border-color: rgba(var(--btn-primary-border-hover));
+		}
+	}
+
+	&-secondary{
+		background-color: rgba(var(--btn-secondary-bg));
+		color: rgba(var(--btn-secondary-text));
+		border-color: rgba(var(--btn-secondary-border));
+
+		&:hover{
+			background-color: rgba(var(--btn-secondary-bg-hover));
+			color: rgba(var(--btn-secondary-text-hover));
+			border-color: rgba(var(--btn-secondary-border-hover));
+		}
+	}
+
+	&-danger{
+		background-color: rgba(var(--btn-danger-bg));
+		color: rgba(var(--btn-danger-text));
+		border-color: rgba(var(--btn-danger-border));
+
+		&:hover{
+			background-color: rgba(var(--btn-danger-bg-hover));
+			color: rgba(var(--btn-danger-text-hover));
+		}
+	}
+}

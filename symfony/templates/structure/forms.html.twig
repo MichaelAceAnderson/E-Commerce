@@ -1,0 +1,61 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{# Style the errors #}
+{% block form_errors %}
+	{% if errors|length > 0 %}
+		{% for error in errors %}
+			<span class="notification error">{{ error.message }}</span>
+		{% endfor %}
+	{% endif %}
+{% endblock %}
+
+{# Style the rows #}
+{% block form_row %}
+	<div class="field">
+		{{- form_errors(form) -}}
+		{{- form_label(form) -}}
+		{{- form_widget(form) -}}
+	</div>
+{% endblock form_row %}
+
+{# Style the labels #}
+{% block form_label %}
+	{% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' label')|trim}) %}
+	{{ parent() }}
+{% endblock form_label %}
+
+{# Style the inputs #}
+{%- block form_widget_simple -%}
+	{% set attr = attr|merge({'class': (attr.class|default('') ~ ' input')|trim}) %}
+	{{ parent() }}
+{%- endblock form_widget_simple -%}
+
+{# Style the buttons #}
+{% block button_widget %}
+	{% set attr = attr|merge({'class': (attr.class|default('') ~ ' btn btn-secondary')|trim}) %}
+	{{ parent() }}
+{% endblock button_widget %}
+
+{# Style the text areas #}
+{%- block textarea_widget -%}
+	{% set attr = attr|merge({'class': (attr.class|default('') ~ ' textarea')|trim}) %}
+	{{ parent() }}
+{%- endblock textarea_widget -%}
+
+{# Style the selects #}
+{%- block choice_widget -%}
+	{% set attr = attr|merge({'class': (attr.class|default('') ~ ' select')|trim}) %}
+	{{ parent() }}
+{%- endblock choice_widget -%}
+
+{# Style the checkboxes #}
+{%- block checkbox_widget -%}
+	{% set attr = attr|merge({'class': (attr.class|default('') ~ ' checkbox')|trim}) %}
+	{{ parent() }}
+{%- endblock checkbox_widget -%}
+
+{# Style the radio buttons #}
+{%- block radio_widget -%}
+	{% set attr = attr|merge({'class': (attr.class|default('') ~ ' radio')|trim}) %}
+	{{ parent() }}
+{%- endblock radio_widget -%}

@@ -1,0 +1,56 @@
+.table {
+	$alpha-accentuation: rgba(0, 0, 0, 0.05);
+
+	text-align: center;
+	width: 100%;
+	margin: 10px 0;
+	border-collapse: collapse;
+	background-color: rgba(var(--bg-item));
+	color: rgba(var(--text-item));
+	border: 1px solid $alpha-accentuation;
+	box-shadow: 0 0 0 1px $alpha-accentuation;
+
+	th {
+		padding: 10px 0;
+		background-color: rgba(var(--bg-secondary));
+		color: rgba(var(--text-secondary));
+	}
+	tr {
+		// Color every other row
+		&:nth-child(2n) {
+			background-color: $alpha-accentuation;
+		}
+	}
+	td {
+		padding: 10px 0;
+
+		a:not(.btn) {
+			color: inherit;
+		}
+
+		p, img, video {
+			display: inline-block;
+		}
+
+		img, video {
+			background: rgba(var(--img-content));
+			vertical-align: middle;
+			margin: 0 5px;
+		}
+	
+		img {
+			max-height: 100px;
+			max-width: 100px;
+		}
+
+		video {
+			max-height: 150px;
+			max-width: 300px;
+		}
+	}
+
+	// Display buttons and forms inline
+	form {
+		display: inline-block;
+	}
+}

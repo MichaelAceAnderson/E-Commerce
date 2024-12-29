@@ -1,0 +1,72 @@
+.order-steps{
+	display: block;
+	width: 100%;
+	text-align: center;
+	position: relative;
+
+	.step{
+		$step-size: 150px;
+
+		position: relative;
+		display: inline-block;
+		width: $step-size;
+		vertical-align: top;
+
+		&:not(:last-child){
+			.circle::after{
+				content: '';
+				display: block;
+				position: absolute;
+				top: 50%;
+				left: 100%;
+				width: $step-size;
+				height: 2px;
+				background: rgba(var(--text-primary));
+			}
+		}
+
+		&.active{
+			.circle{
+				background: rgba(var(--bg-primary));
+				color: rgba(var(--text-primary));
+			}
+		}
+
+		.circle{
+			box-shadow: 0 0 1px rgba(var(--bg-secondary));
+			padding: 10px;
+			height: 60px;
+			width: 60px;
+			display: inline-block;
+			background: rgba(var(--bg-secondary));
+			border-radius: 50%;
+			position: relative;
+			color: rgba(var(--text-secondary));
+
+			svg, img{
+				color: inherit;
+				fill: currentColor;
+				height: 100%;
+				max-width: 100%;
+			}
+		}
+
+		p{
+			display: block;
+		}
+	}
+}
+
+
+// Do not draw lines between steps on small screens
+@media screen and (max-width: 768px){
+	.order-steps{
+		.step{
+			&:not(:last-child){
+				.circle::after{
+					display: none;
+				}
+			}
+		}
+	}
+}

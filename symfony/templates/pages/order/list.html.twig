@@ -1,0 +1,54 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'My Orders' %} 
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Home' },
+	{ 'link': path('app_user_show'), 'name': 'My Account' },
+	{ 'link': path(currentRoute), 'name': currentPage }
+]} %}
+
+	<section class="section center">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+		{% if orders is defined %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Number</th>
+						<th>Date</th>
+						<th>Status</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for order in orders %}
+						<tr>
+							<td>{{ order.number }}</td>
+							<td>{{ order.orderDate|date('d/m/Y') }}</td>
+							<td>{{ order.isValidated ? '✔️' : '❌' }}</td>
+							<td>
+								<a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-secondary">View</a>
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="4">You have no orders associated with this account!</td>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p class="notification info">You have no orders!</p>
+		{% endif %}
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

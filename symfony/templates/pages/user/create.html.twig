@@ -1,0 +1,44 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Create a user' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_user_list'), 'name': 'User Management' },
+		{ 'link': path('app_user_create'), 'name': 'Create' }
+	]} 
+	%}
+	<section class="section">
+	{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+	{% include 'structure/notifications.html.twig' %}
+
+
+		<h2>Create the user</h2>
+
+		<div class="profile-edit">
+			{{ form_start(creationForm) }}
+			{{ form_row(creationForm.firstName) }}
+			{{ form_row(creationForm.lastName) }}
+			{{ form_row(creationForm.email) }}
+			{{ form_row(creationForm.phone) }}
+			{{ form_row(creationForm.password.first) }}
+			{{ form_row(creationForm.password.second) }}
+			{% if is_granted('ROLE_ADMIN') and creationForm.roles is defined %}
+				{{ form_row(creationForm.roles) }}
+			{% endif %}
+			{{ form_row(creationForm.save) }}
+			{{ form_end(creationForm) }}
+		</div>
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

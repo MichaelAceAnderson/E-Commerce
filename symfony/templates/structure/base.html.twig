@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% set name = 'Bashion' %}
+		{% set slogan = 'The basics of fashion' %}
+
+		<meta charset="UTF-8">
+
+		<title>{% block pageTitle %}{{ name }}{% endblock %}</title>
+		<meta name="description" content="{{ slogan }}, a tailor-made experience in ready-to-wear!">
+		<meta name="keywords" content="{{ name }}, Clothes, Ready-to-wear, Fashion, Style, Trend, Trends, Fashion trends, Clothing trends, Ready-to-wear trends, Trendy clothes, Trendy ready-to-wear, Fashion trends, Fashion style, Fashion clothes, Fashion ready-to-wear, Style trends, Fashion style, Clothing style, Ready-to-wear style">
+		<meta name="author" content="Adrien">
+		<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+		<link rel="alternate icon" href="/favicon.ico">
+
+		<link rel="stylesheet" href="/assets/style/css/theme/general.css">
+		{# Depending on whether the theme is dark or light, we change the browser theme color (Chrome mobile) #}
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="white">
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#333">
+
+		{# Used for responsive design #}
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		{% block stylesheets %}
+		{% endblock %}
+
+		{# Prevent CSS transitions from applying during page load with the loading class #}
+		<script src="/assets/style/js/transitionLoader.js"></script>
+		{% block scripts %}
+		{% endblock %}
+	</head>
+	<body class="loading">
+		{% block content %}{% endblock %}
+	</body>
+</html>

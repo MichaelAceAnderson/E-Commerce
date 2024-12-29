@@ -1,0 +1,25 @@
+###> symfony/framework-bundle ###
+symfony/config/secrets/prod/prod.decrypt.private.php
+symfony/public/bundles/
+symfony/var/
+symfony/vendor/
+###< symfony/framework-bundle ###
+
+# Do not track IDE configuration files
+.vscode/
+# Do not track SASS compilation files
+**/*.css.map
+# Do not track generated CSS files
+**/*.css
+# Track the general.css file
+!**/general.css
+# Do not track logs
+**/*.log*
+# Do not track database data
+.docker/mariadb/data/*
+# Composer console
+**/composer.phar
+**/composer.bat
+
+# Keep directories containing a .gitkeep file but not necessarily their content
+!**/.gitkeep

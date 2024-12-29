@@ -1,0 +1,96 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'My order ' ~ (order.number ? '(No. ' ~ order.number ~ ')' : '') %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+		{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Home' },
+	{ 'link': path('app_order_list'), 'name': 'My orders' },
+	{ 'link': order.id ? path(currentRoute, {'id': order.id}) : '#', 'name': currentPage }
+	]} %}
+
+	<section class="section center">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+		{% if order is defined %}
+			<div class="box product-list">
+					<div class="title">
+						<h2>Order from {{ order.orderDate|date('d/m/Y') }}</h2>
+						<hr>
+					</div>
+					<h2>Status:
+						{{ order.isValidated ? 'Validated' : 'Pending' }}</h2>
+					<h2>Delivery address:</h2>
+					<p>Last name: {{ order.customerAddress.lastName }}</p>
+					<p>First name: {{ order.customerAddress.firstName }}</p>
+					<p>Phone: {{ order.customerAddress.phone }}</p>
+					<p>Address: {{ order.customerAddress.address }}</p>
+					<p>City: {{ order.customerAddress.city }}, {{ order.customerAddress.postalCode }}</p>
+					<p>Country: {{ order.customerAddress.country }}</p>
+					<h2>Order content:</h2>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Product</th>
+								<th>Unit price</th>
+								<th>Quantity</th>
+								<th>Total price</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% set total = 0 %}
+							{% set nbItems = 0 %}
+							{% for productQuantity in orderProductQuantities %}
+								{% set total = total + productQuantity.product.price * productQuantity.quantity %}
+								{% set nbItems = nbItems + productQuantity.quantity %}
+								<tr>
+									<td>
+										<a href="{{ path('app_product_show', {'id': productQuantity.product.id}) }}" target="_blank">
+											{% if productQuantity.product.medias[0] is defined %}
+												{# If the media is an image #}
+												{% if 'image' in productQuantity.product.medias[0].type %}
+													<img src="{{ productQuantity.product.medias[0].path }}" alt="{{ productQuantity.product.medias[0].alt }}" title="{{ productQuantity.product.medias[0].alt }}">
+												{# If the media is a video #}
+												{% elseif 'video' in productQuantity.product.medias[0].type %}
+													<video src="{{ productQuantity.product.medias[0].path }}" title="{{ productQuantity.product.medias[0].alt }}" muted loop autoplay preload></video>
+												{# If the media is of an unsupported type #}
+												{% else %}
+													{% include 'icons/menus/help.svg' %}
+												{% endif %}
+											{% endif %}
+											<p>{{ productQuantity.product.name }}</p>
+										</a>
+									</td>
+									<td>{{ productQuantity.product.price }} €</td>
+									<td>{{ productQuantity.quantity }}</td>
+									<td>{{ productQuantity.product.price * productQuantity.quantity }} €</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="4">Your order contains no products!</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<hr>
+					<div class="summary">
+						<h3>Total quantity of items: <span class="right">{{ nbItems }}</span></h3>
+						<h3>Delivery fee: <span class="right">{{ order.deliveryFee }}</span></h3>
+						<h3>Total: <span class="right">{{ total + order.deliveryFee }}€</span></h3>
+					</div>
+			</div>
+		</form>
+
+	{% else %}
+		<p class="notification info">The order you want to display does not exist!</p>
+	{% endif %}
+</section>
+
+{% include 'structure/footer.html.twig' %}{% endblock %}

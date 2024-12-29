@@ -1,0 +1,134 @@
+.reviews{
+	background-color: rgba(var(--bg-tertiary));
+	color: rgba(var(--text-tertiary));
+	width: 100%;
+	display: block;
+	text-align: center;
+	padding: 10px;
+
+	.review{
+		$width-img: 20%;
+		$margin-infos: 2%;
+		$content-padding: 15px;
+
+		max-width: 300px;
+		max-height: 200px;
+		margin: 0 20px;
+		display: inline-block;
+		background: rgba(var(--bg-content));
+		border-radius: 10px;
+		padding: $content-padding;
+		text-align: justify;
+		vertical-align: top;
+
+		// ================ Hide overflowing text ===========================
+		position: relative;
+		overflow: hidden;
+
+		.detail-toggle{
+			position: absolute;
+			z-index: 1;
+			bottom: 0;
+			left: 0;
+			color: rgba(var(--link-content));
+			text-decoration: none;
+			background: rgba(var(--bg-content), 0.6);
+			box-shadow: 2px -2px 2px rgba(var(--bg-content), 0.6);
+			padding: 5px 15px;
+			border-radius: 5px;
+			cursor: pointer;
+
+			img{
+				width: 2em;
+				height: 2em;
+				vertical-align: middle;
+			}
+		}
+
+		&.open{
+			max-height: none;
+		}
+		&.open::after{
+			background: transparent;
+		}
+		&::after {
+			content: "";
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			height: 20%;
+			width: 100%;
+			background: linear-gradient(transparent, rgba(var(--bg-content)));
+		}
+		// ========================================================================
+		
+		.intro{
+			text-wrap: nowrap;
+			display: block;
+			margin-bottom: 10px;
+			text-transform: uppercase;
+			font-weight: bold;
+
+			*{
+				vertical-align: middle;
+			}
+			
+			.profile{
+
+				img{
+					width: rgba(var(--width-img));
+					max-height: 100%;
+					display: inline-block;
+	
+				}
+			}
+	
+			.infos{
+				margin-left: $margin-infos;
+				max-width: calc(100% - $width-img - $margin-infos);
+				display: inline-block;
+
+				.stars{
+					img{
+						width: 2em;
+						height: 2em;
+					}
+				}
+				h2{
+					text-wrap: wrap;
+					margin: 0;
+					padding: 0;
+				}
+			}
+		}
+		.content{
+			margin: 0;
+			padding: 0;
+
+			p{
+				margin: 0;
+				padding: 0;
+			}
+		}
+
+		.source{
+			text-align: right;
+			font-size: 0.8em;
+			background: rgba(var(--bg-content));
+
+			p{
+				margin: 0;
+				padding: 0;
+				text-align: inherit;
+				vertical-align: middle;
+			}
+
+			img{
+				margin-left: 0.5em;
+				width: 4em;
+				height: 4em;
+				vertical-align: middle;
+			}
+		}
+	}
+}

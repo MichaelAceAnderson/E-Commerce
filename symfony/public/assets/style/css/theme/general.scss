@@ -1,0 +1,53 @@
+//⚠️Note: Only this file needs to be compiled
+// The generated .css file should be imported into the .html file
+
+@import 'default/theme';
+@import 'dark/theme';
+
+:root{
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+// Common properties for all themes
+body{
+	color: var(--text-primary);
+	font-family: var(--global-font-family);
+	background-color: rgba(var(--bg-content));
+	margin: 0;
+	padding: 0;
+
+	*{
+		// Remove outlines on clickable elements
+		outline: none;
+		// Prevent overflow issues related to margins and paddings
+		box-sizing: border-box;
+	}
+}
+
+// Structure
+@import '../components/structure/header';
+@import '../components/structure/section';
+@import '../components/structure/footer';
+@import '../components/structure/title';
+@import '../components/structure/box';
+
+// Basic components
+@import '../components/element/input';
+@import '../components/element/button';
+@import '../components/element/notification';
+@import '../components/element/table';
+@import '../components/element/toggle';
+
+// Composite components
+@import '../components/composite/banner';
+@import '../components/composite/announce';
+@import '../components/composite/reviews';
+@import '../components/composite/item';
+@import '../components/composite/product';
+@import '../components/composite/filter';
+@import '../components/composite/login';
+@import '../components/composite/product-list';
+@import '../components/composite/order-steps';

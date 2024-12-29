@@ -1,0 +1,203 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Test Page: UI Components' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+	{ 'link': path('app_home'), 'name': 'Home' },
+	{ 'link': path(currentRoute), 'name': currentPage }
+]} %}
+	<section class="section">
+		<div class="intro">
+			<div class="title">
+				<h1>{{ currentPage }}</h1>
+				<hr>
+			</div>
+		</div>
+		<h1>Title 1</h1>
+		<h2>Title 2</h2>
+		<h3>Title 3</h3>
+		<h4>Title 4</h4>
+		<h5>Title 5</h5>
+		<h6>Title 6</h6>
+		<p>Paragraph</p>
+		<p>
+			<strong>Strong paragraph</strong>
+		</p>
+		<p>
+			<em>Italic paragraph</em>
+		</p>
+		<p>
+			<u>Underlined paragraph</u>
+		</p>
+		<p>
+			<s>Strikethrough paragraph</s>
+		</p>
+		<p>
+			<mark>Highlighted paragraph</mark>
+		</p>
+		<p>
+			<small>Small paragraph</small>
+		</p>
+		<p>
+			<big>Big paragraph</big>
+		</p>
+		<p>
+			<sub>Subscript paragraph</sub>
+		</p>
+		<p>
+			<sup>Superscript paragraph</sup>
+		</p>
+		<p>
+			<abbr title="HyperText Markup Language">HTML</abbr>
+		</p>
+		<p>
+			<cite>Citation</cite>
+		</p>
+		<p>
+			<code>Code</code>
+		</p>
+		<p>
+			<kbd>Keyboard</kbd>
+		</p>
+		<p>
+			<samp>Sample</samp>
+		</p>
+		<p>
+			<a href="#">Link</a>
+		</p>
+		<div class="component">
+			<h1>Form Components</h1>
+			<button type="button" class="btn btn-primary">Primary button</button>
+			<button type="button" class="btn btn-secondary">Secondary button</button>
+			<button type="button" class="btn btn-danger">Danger button</button>
+			<input type="text" class="input" placeholder="Text field">
+			<input type="password" class="input" placeholder="Password field">
+			<input type="email" class="input" placeholder="Email field">
+			<input type="number" class="input" placeholder="Number field">
+			<input type="tel" class="input" placeholder="Phone field">
+			<input type="url" class="input" placeholder="URL field">
+			<input type="date" class="input" placeholder="Date field">
+			<input type="time" class="input" placeholder="Time field">
+			<input type="datetime-local" class="input" placeholder="Date and time field">
+			<input type="month" class="input" placeholder="Month field">
+			<input type="week" class="input" placeholder="Week field">
+			<input type="color" class="input" placeholder="Color field">
+			<textarea class="textarea" placeholder="Text area"></textarea>
+			<select class="select">
+				<option value="1">Option 1</option>
+				<option value="2">Option 2</option>
+				<option value="3">Option 3</option>
+			</select>
+			<input type="file" placeholder="File field" accept="image/*" multiple class="input">
+			<input type="checkbox" class="checkbox">
+			<input type="radio" class="radio">
+		</div>
+		<div class="component">
+			<h1>Table</h1>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Header 1</th>
+						<th>Header 2</th>
+						<th>Header 3</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Cell 1</td>
+						<td>Cell 2</td>
+						<td>Cell 3</td>
+					</tr>
+					<tr>
+						<td>Cell 4</td>
+						<td>Cell 5</td>
+						<td>Cell 6</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="component">
+			<h1>Switch</h1>
+			<label class="switch">
+				<input type="checkbox" id="themeSwitch">
+				<span class="slider round"></span>
+			</label>
+		</div>
+		<div class="component">
+			<h1>Review</h1>
+			<div class="reviews">
+				<div class="review open">
+					<div class="intro">
+						<span class="profile">{% include 'icons/menus/account.svg' %}</span>
+						<div class="infos">
+							<div class="stars">
+								{% for i in 1..3 %}
+									{% include 'icons/menus/star-full.svg' %}
+								{% endfor %}
+								{% for i in 1..2 %}
+									{% include 'icons/menus/star-empty.svg' %}
+								{% endfor %}
+							</div>
+							<h2>Title</h2>
+						</div>
+					</div>
+					<div class="content">
+						<p>Text</p>
+					</div>
+					<div class="source">
+						<p>Source:
+							<a href="">{% include 'icons/brands/Google.svg' %}</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="component">
+			<h1>Order Steps</h1>
+			<div class="order-steps">
+				<div class="step active">
+					<div class="circle">
+						{% include 'icons/menus/cart.svg' %}
+					</div>
+					<p>1. Step 1</p>
+				</div>
+				<div class="step">
+					<div class="circle">
+						{% include 'icons/menus/home.svg' %}
+					</div>
+					<p>2. Step 2</p>
+				</div>
+				<div class="step">
+					<div class="circle">
+						{% include 'icons/menus/credit_card.svg' %}
+					</div>
+					<p>3. Step 3</p>
+				</div>
+			</div>
+		</div>
+		<div class="component">
+			<h1>Product</h1>
+				<div class="items">
+					<a class="item" href="#">
+						<div class="preview">
+							{% include 'icons/menus/help.svg' %}
+						</div>
+						<div class="info">
+							<h2>Name</h2>
+							<p>Price €</p>
+						</div>
+					</a>
+				</div>
+		</div>
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

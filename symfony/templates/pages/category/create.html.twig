@@ -1,0 +1,47 @@
+{% extends 'structure/base.html.twig' %}
+
+{% set currentPage = 'Create a category' %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+{% block pageTitle %}
+	{{ parent() }}
+	-
+	{{ currentPage }}
+{% endblock %}
+
+
+{% block content %}
+	{% include 'structure/header.html.twig' with {'currentRoute': currentRoute, 'breadcrumbs': [
+		{ 'link': path('app_home'), 'name': 'Home' },
+		{ 'link': path('app_category_list'), 'name': 'Category Management' },
+		{ 'link': path('app_category_create'), 'name': 'Create' }
+	]} 
+	%}
+	<section class="section">
+		{% include 'structure/title.html.twig' with {'currentPage': currentPage} %}
+		{% include 'structure/notifications.html.twig' %}
+
+
+		<h2>Create the category</h2>
+
+		{{ form_start(creationForm) }}
+		<div class="category">
+			<div class="medias">
+				<div
+					class="preview">
+					{% include 'icons/menus/help.svg' %}
+				</div>
+				{{ form_row(creationForm.media) }}
+			</div>
+			<div class="info">
+				{{ form_errors(creationForm) }}
+				<h2>{{ form_row(creationForm.name) }}</h2>
+				{{ form_row(creationForm.description) }}
+				{{ form_row(creationForm.save) }}
+			</div>
+		</div>
+		{{ form_end(creationForm) }}
+	</section>
+
+	{% include 'structure/footer.html.twig' %}
+{% endblock %}

@@ -1,0 +1,35 @@
+{# It is possible to display flash messages in HTML using the |raw filter, but
+this filter is dangerous because it disables HTML character escaping and thus allows
+malicious code injection into the page. Therefore, we will use arrays in flash messages
+from which we will convert key names into HTML elements and display the values #}
+
+{# nl2br converts line breaks \n to <br> format #}
+{# This filter is necessary to make line breaks in flash messages
+since HTML code is escaped by default in Twig #}
+{% for type, messages in app.flashes %}
+	{% for message in messages %}
+		<p class="notification {{ type }}">
+		{# If the message is iterable (array, ...) #}
+		{% if message is iterable %}
+			{% for element, msg in message %}
+					{# Allow the display of titles h1, h2, h3 etc. but ignore other keys containing numbers #}
+
+					{# If the key contains a digit and an underscore #}
+					{% if element matches '/.*_\\d+/' %}
+						{# Ignore numbers and the underscore in the key name #}
+						{% set element = element|replace({ '_': '',  '0': '', '1': '', '2': '', '3': '', '4': '', '5': '', '6': '', '7': '', '8': '', '9': '' }) %}
+					{% endif %}
+					
+					{# If the key contains "msg" in its name #}
+					{% if element matches '/msg/' %}
+						{{ msg|nl2br }}
+					{% else %}
+						<{{ element }}>{{ msg|nl2br }}</{{ element }}>
+					{% endif %}
+				{% endfor %}
+		{% else %}
+			{{ message|nl2br }}
+		{% endif %}
+		</p>
+	{% endfor %}
+{% endfor %}

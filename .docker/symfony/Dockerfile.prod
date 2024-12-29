@@ -1,0 +1,59 @@
+# NOTE: Docker cannot fetch files outside the build context
+# Therefore, we build this image from the project's root directory
+
+# Base image
+# To communicate with the Nginx container, FPM is necessary
+# Alpine is a lightweight version of Linux that helps reduce the image size
+FROM php:8.2-fpm-alpine
+
+# Set the working directory
+WORKDIR /var/www/html/
+
+# Install curl to download Composer and bash to run scripts
+# NOTE: bash can also be used to run any type of command or script in the container
+RUN apk update && apk add --no-cache \
+	curl \
+	bash
+
+# Install the PHP extensions required by Symfony
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Copy PHP configuration files
+COPY .docker/symfony/conf/ /usr/local/etc/php/
+
+# Download Composer into the executable directory to use it from anywhere
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Since Nginx passes requests to PHP-FPM, it must contain the application's source code
+# Copy the rest of the files before installation
+COPY symfony/ ./
+
+# Set the environment variable to allow Composer to run as a superuser
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Install Composer dependencies (preparing it for production deployment)
+RUN composer install --no-interaction --no-dev --optimize-autoloader --no-scripts
+# To use in PROD:
+# --no-interaction: do not ask for user interaction
+# --no-dev: do not install development dependencies
+# --optimize-autoloader: optimize class autoloading
+# --no-scripts: do not run Composer scripts 
+#	(which are not necessary in production, see "scripts" in composer.json)
+
+# Copy the entrypoint script
+COPY .docker/symfony/init/prod/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Grant execution rights to the entrypoint script
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Run the entrypoint script at each container startup
+# NOTE: Adding an ENTRYPOINT in the Dockerfile overrides the parent image's ENTRYPOINT
+ENTRYPOINT [ "entrypoint.sh" ]
+
+# Start PHP-FPM
+# NOTE: Specifying a new ENTRYPOINT cancels the parent image's CMD
+#		and requires redefining the container's startup command
+CMD [ "php-fpm" ]
+
+# Make the PHP server accessible on port 9000
+EXPOSE 9000

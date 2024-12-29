@@ -1,0 +1,113 @@
+services:
+  ecommerce-mariadb-s:
+    container_name: "ecommerce-mariadb-c"
+    build:
+      context: ../
+      dockerfile: ".docker/mariadb/Dockerfile.dev"
+    env_file:
+      - "mariadb/.env.dev"
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: "mariadb/data/"
+        target: "/var/lib/mysql/"
+        # Only for macOS
+        consistency: consistent
+      - type: bind
+        source: "mariadb/logs/"
+        target: "/var/log/mysql/"
+        consistency: consistent
+    networks:
+      - ecommerce-network
+    ports:
+      - 3306:3306
+
+  ecommerce-adminer-s:
+    container_name: "ecommerce-adminer-c"
+    image: adminer
+    env_file:
+      - "adminer/.env.dev"
+    restart: on-failure
+    ports:
+      - 8080:8080
+    networks:
+      - ecommerce-network
+    depends_on:
+      - ecommerce-mariadb-s
+
+  ecommerce-symfony-s:
+    container_name: "ecommerce-symfony-c"
+    build:
+      context: ../
+      dockerfile: ".docker/symfony/Dockerfile.dev"
+    env_file:
+      - "mariadb/.env.dev"
+      - "symfony/.env.dev"
+    restart: on-failure
+    # To avoid rebuilding the image with each modification
+    # We set up volumes to bind host files to container files
+    # NOTE ⚠️: We do not mount the var/, vendor/ directories or any other entire parent directory to avoid
+    # performance and compatibility issues between file systems on dependencies
+    # and cache files
+    volumes:
+      - type: bind
+        source: "../symfony/config/"
+        target: "/var/www/html/config/"
+        consistency: consistent
+      - type: bind
+        source: "../symfony/migrations/"
+        target: "/var/www/html/migrations/"
+        consistency: consistent
+      - type: bind
+        source: "../symfony/public/"
+        target: "/var/www/html/public/"
+      - type: bind
+        source: "../symfony/src/"
+        target: "/var/www/html/src/"
+        consistency: consistent
+      - type: bind
+        source: "../symfony/templates/"
+        target: "/var/www/html/templates/"
+        consistency: consistent
+      - type: bind
+        source: "symfony/logs/"
+        target: "/var/log/php/"
+        consistency: consistent
+    ports:
+      - "9000:9000"
+    networks:
+      - ecommerce-network
+    depends_on:
+      - ecommerce-mariadb-s
+
+  ecommerce-nginx-s:
+    container_name: "ecommerce-nginx-c"
+    build:
+      context: ../
+      dockerfile: ".docker/nginx/Dockerfile.dev"
+    env_file:
+      - "nginx/.env.dev"
+    restart: on-failure
+    # To avoid rebuilding the image with each modification
+    # We set up volumes to bind host files to container files
+    # Nginx will only need static files since the rest of PHP is read
+    # by the PHP-FPM container
+    volumes: 
+      - type: bind
+        source: "../symfony/public/"
+        target: "/var/www/html/public/"
+        consistency: consistent
+      - type: bind
+        source: "nginx/logs/"
+        target: "/var/log/nginx/"
+        consistency: consistent
+    ports:
+      - "80:80"
+    networks:
+      - ecommerce-network
+    depends_on:
+      - ecommerce-symfony-s
+
+networks:
+  ecommerce-network:
+    driver: bridge
